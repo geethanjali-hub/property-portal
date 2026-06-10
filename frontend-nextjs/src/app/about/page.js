@@ -1,0 +1,273 @@
+"use client";
+
+import React from 'react';
+import Link from 'next/link';
+import { Target, Eye, Award, Users, Building2, CheckCircle, ArrowRight, Star, Quote, Heart, Shield, Headphones, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const AboutPage = () => {
+  const stats = [
+    { number: '1000+', label: 'Events Hosted' },
+    { number: '5000+', label: 'Happy Guests' },
+    { number: '10+', label: 'Years Experience' },
+    { number: '20+', label: 'Event Specialists' },
+  ];
+
+  const values = [
+    {
+      icon: Target,
+      title: 'Our Mission',
+      description: 'To provide a stunning, hassle-free venue and help every individual celebrate their special moments with elegance and joy.'
+    },
+    {
+      icon: Eye,
+      title: 'Our Vision',
+      description: 'To become the most sought-after party hall in Ramanagara, known for breathtaking ambiance, customer satisfaction, and exceptional service.'
+    },
+    {
+      icon: Heart,
+      title: 'Our Values',
+      description: 'We believe in honesty, transparency, and putting our customers first. Every interaction is guided by our commitment to excellence.'
+    }
+  ];
+
+  const team = [
+    { name: 'Rajesh Kumar', role: 'Founder & CEO', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400' },
+    { name: 'Priya Sharma', role: 'Head of Operations', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400' },
+    { name: 'Amit Patel', role: 'Senior Property Consultant', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400' },
+    { name: 'Sneha Reddy', role: 'Customer Relations Manager', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400' },
+  ];
+
+  const testimonials = [
+    {
+      name: 'Vikram Singh',
+      role: 'Entrepreneur',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+      rating: 5,
+      text: 'Exceptional service! The team at Make My Propertyz went above and beyond to help me find the perfect commercial space for my business. Highly recommended!'
+    },
+    {
+      name: 'Ananya Gupta',
+      role: 'Software Engineer',
+      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      rating: 5,
+      text: 'Found my dream 2BHK apartment within a week. The process was incredibly smooth and the team was very supportive throughout.'
+    },
+    {
+      name: 'Dr. Suresh Menon',
+      role: 'Medical Professional',
+      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150',
+      rating: 5,
+      text: 'Professional, transparent, and efficient. Make My Propertyz helped me find a beautiful villa for my family. Could not be happier!'
+    }
+  ];
+
+  const features = [
+    { icon: Shield, title: 'Premium Venue', desc: 'Beautifully maintained open-air spaces' },
+    { icon: Headphones, title: 'Dedicated Support', desc: 'Always here to help you plan' },
+    { icon: TrendingUp, title: 'Great Value', desc: 'Competitive packages for all events' },
+    { icon: Award, title: 'Top Rated', desc: 'Highly reviewed by our guests' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-[#D01F3C] to-[#B01A33] text-white py-32 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <motion.img 
+            src="/nature_party_hall.png" 
+            alt="Background" 
+            className="w-full h-full object-cover"
+            animate={{ scale: [1, 1.15] }}
+            transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+          />
+        </div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="inline-block text-white font-black text-[10px] uppercase tracking-[0.4em] mb-6 bg-white/10 px-6 py-3 rounded-full border border-white/10">The Venue</span>
+            <h1 className="text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-none">About Nature <br/> Party <span className="text-white/60 text-italic">Hall.</span></h1>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto font-medium leading-relaxed">
+              We define the standard of event hosting in Ramanagara. Our mission is to curate the most memorable events for you and your loved ones amidst lush greenery.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-8 bg-white -mt-12 relative z-10">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="bg-white rounded-2xl shadow-xl p-8 grid grid-cols-2 md:grid-cols-4 gap-8 border border-neutral-100">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center group">
+                <div className="text-4xl font-black text-[#D01F3C] mb-2 tracking-tighter group-hover:scale-110 transition-transform">{stat.number}</div>
+                <div className="text-xs font-bold text-neutral-500 uppercase tracking-widest">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      <section className="py-24 bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="text-[#D01F3C] font-bold text-sm uppercase tracking-widest">Our Story</span>
+              <h2 className="text-4xl font-black text-neutral-900 mt-2 mb-8 tracking-tighter">Building Memories Since 2015</h2>
+              <div className="space-y-6 text-neutral-600 font-medium leading-relaxed">
+                <p>
+                  Nature Party Hall was founded with a simple yet powerful vision: to provide a breathtaking natural backdrop for life's most precious celebrations in Ramanagara. What started as a modest open-air venue has grown into the region's most beloved event destination.
+                </p>
+                <p>
+                  Over the years, we have hosted thousands of weddings, birthday parties, and corporate retreats. Our commitment to stunning aesthetics, customer satisfaction, and smooth event execution has made us a leader in the local hospitality space.
+                </p>
+                <p>
+                  Today, we continue to enhance our venue, adding modern amenities while preserving the lush greenery that our guests love, making every celebration truly unforgettable.
+                </p>
+              </div>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="rounded-[2.5rem] overflow-hidden shadow-2xl">
+                <img
+                  src="/nature_party_hall.png"
+                  alt="Party Hall"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-8 -left-8 bg-[#D01F3C] text-white p-8 rounded-[2rem] shadow-2xl">
+                <div className="text-5xl font-black tracking-tighter">2010</div>
+                <div className="text-xs font-bold uppercase tracking-widest text-[#FDE6E8]">Year Founded</div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <span className="text-[#D01F3C] font-bold text-sm uppercase tracking-widest">What Drives Us</span>
+            <h2 className="text-4xl font-black text-neutral-900 mt-2 tracking-tighter">Mission, Vision & Values</h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {values.map((value, index) => (
+              <div key={index} className="bg-white rounded-[2rem] p-8 shadow-lg hover:shadow-2xl transition-all border border-neutral-100">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#D01F3C] to-[#B01A33] rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <value.icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-black text-neutral-900 mb-4 tracking-tight">{value.title}</h3>
+                <p className="text-neutral-500 font-medium leading-relaxed">{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-24 bg-neutral-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <span className="text-[#D01F3C] font-bold text-sm uppercase tracking-widest">Our Team</span>
+            <h2 className="text-4xl font-black text-neutral-900 mt-2 tracking-tighter">Meet The Experts</h2>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+            {team.map((member, index) => (
+              <div key={index} className="text-center group">
+                <div className="relative mb-6">
+                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:border-[#D01F3C] transition-all duration-300">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
+                </div>
+                <h3 className="font-black text-neutral-900 text-lg tracking-tight">{member.name}</h3>
+                <p className="text-[#D01F3C] font-bold text-xs uppercase tracking-widest mt-1">{member.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24 bg-neutral-50 text-neutral-900 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#D01F3C]/5 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#D01F3C]/5 rounded-full blur-[100px]"></div>
+
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
+          <div className="text-center mb-20">
+            <span className="inline-block text-[#D01F3C] font-black text-[10px] uppercase tracking-[0.4em] mb-4">Voice of Success</span>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 text-neutral-900">Client <span className="text-[#D01F3C]">Testimonials.</span></h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-[2.5rem] p-10 relative border border-neutral-100 shadow-sm hover:shadow-2xl transition-all group">
+                <div className="absolute -top-6 left-10 w-12 h-12 bg-gradient-to-br from-[#D01F3C] to-[#B01A33] rounded-xl flex items-center justify-center shadow-xl shadow-[#D01F3C]/20 group-hover:scale-110 transition-transform">
+                  <Quote className="w-6 h-6 text-white" />
+                </div>
+                
+                <div className="flex items-center mb-8 mt-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-[#D01F3C] fill-[#D01F3C]" />
+                  ))}
+                </div>
+                
+                <p className="text-neutral-600 mb-10 font-medium leading-relaxed italic text-sm">"{testimonial.text}"</p>
+                
+                <div className="flex items-center">
+                  <img 
+                    src={testimonial.image} 
+                    alt={testimonial.name}
+                    className="w-14 h-14 rounded-full object-cover border-2 border-[#D01F3C]/20 group-hover:border-[#D01F3C] transition-colors"
+                  />
+                  <div className="ml-4">
+                    <h4 className="font-black text-neutral-900 tracking-tight">{testimonial.name}</h4>
+                    <p className="text-neutral-400 text-[10px] font-black uppercase tracking-widest">{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-32 bg-white px-4 text-center">
+         <div className="max-w-3xl mx-auto">
+            <h2 className="text-5xl font-black text-neutral-900 mb-10 tracking-tighter leading-none">Ready To Plan Your <br/> Next Event?</h2>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+               <Link href="/contact" className="btn-primary flex items-center justify-center space-x-2 px-10 py-5">
+                  <span>Book Now</span>
+                  <ArrowRight className="w-5 h-5" />
+               </Link>
+               <Link href="/contact" className="btn-outline px-10 py-5">
+                  Contact Us
+               </Link>
+            </div>
+         </div>
+      </section>
+    </div>
+  );
+};
+
+export default AboutPage;

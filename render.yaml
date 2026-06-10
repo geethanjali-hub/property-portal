@@ -1,0 +1,52 @@
+services:
+  # 1. MySQL Private Service
+  - type: pserv
+    name: mysql-db
+    env: docker
+    dockerfilePath: Dockerfile.mysql
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: property_portal
+      - key: MYSQL_USER
+        value: admin
+      - key: MYSQL_PASSWORD
+        generateValue: true
+
+  # 2. FastAPI Backend
+  - type: web
+    name: property-portal-backend
+    env: python
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: MYSQL_HOST
+        value: mysql-db
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USER
+        value: admin
+      - key: MYSQL_PASSWORD
+        fromService:
+          type: pserv
+          name: mysql-db
+          envVarKey: MYSQL_PASSWORD
+      - key: MYSQL_DB
+        value: property_portal
+      - key: JWT_SECRET
+        generateValue: true
+
+  # 3. Next.js Frontend
+  - type: web
+    name: property-portal-frontend
+    env: node
+    buildCommand: "cd frontend-nextjs && npm install && npm run build"
+    startCommand: "cd frontend-nextjs && npm start"
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: "https://property-portal-backend.onrender.com" # You may need to update this URL in the Render dashboard if the backend is assigned a different URL suffix.

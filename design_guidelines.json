@@ -1,0 +1,157 @@
+{
+  "identity": {
+    "name": "SriSuktam Organics",
+    "tagline": "Swasthya Shuddi..",
+    "mission": "To bring the purity of traditional Indian organic farming to modern homes.",
+    "aesthetics": "Organic, Earthy, Traditional Indian, Trustworthy, Serene.",
+    "emotional_tone": "Warm, Nostalgic, Pure, Grounded.",
+    "theme_mode": "light",
+    "design_archetype": "The Organic & Earthy (Archetype 1)"
+  },
+  "typography": {
+    "primary_font": "Manrope",
+    "secondary_font": "Playfair Display",
+    "font_cdn": "https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap",
+    "usage": {
+      "headings": "font-serif tracking-tight font-medium text-stone-900",
+      "body": "font-sans text-stone-600 leading-relaxed",
+      "accent": "font-serif italic text-primary"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": "#1A4D2E",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#C05621",
+      "secondary_foreground": "#FFFFFF",
+      "accent": "#D69E2E",
+      "accent_foreground": "#1C1917",
+      "background": "#FDFBF7",
+      "foreground": "#1C1917",
+      "muted": "#F5F5F4",
+      "muted_foreground": "#78716C",
+      "border": "#E7E5E4",
+      "input": "#E7E5E4",
+      "ring": "#1A4D2E"
+    },
+    "tailwind_config_extension": {
+      "colors": {
+        "border": "hsl(var(--border))",
+        "input": "hsl(var(--input))",
+        "ring": "hsl(var(--ring))",
+        "background": "#FDFBF7",
+        "foreground": "#1C1917",
+        "primary": {
+          "DEFAULT": "#1A4D2E",
+          "foreground": "#FFFFFF"
+        },
+        "secondary": {
+          "DEFAULT": "#C05621",
+          "foreground": "#FFFFFF"
+        },
+        "accent": {
+          "DEFAULT": "#D69E2E",
+          "foreground": "#1C1917"
+        },
+        "muted": {
+          "DEFAULT": "#F5F5F4",
+          "foreground": "#78716C"
+        },
+        "card": {
+          "DEFAULT": "#FFFFFF",
+          "foreground": "#1C1917"
+        }
+      },
+      "fontFamily": {
+        "sans": ["Manrope", "sans-serif"],
+        "serif": ["Playfair Display", "serif"]
+      },
+      "borderRadius": {
+        "lg": "1rem",
+        "md": "0.75rem",
+        "sm": "0.5rem"
+      }
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid",
+    "container_width": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "spacing": {
+      "section_padding": "py-16 lg:py-24",
+      "element_gap": "gap-6 lg:gap-8"
+    },
+    "modes": {
+      "marketing": "Use 'Tetris' Grid: Mix of col-span-full, col-span-4, col-span-6. Asymmetry is key.",
+      "product_list": "Grid cols-1 sm:cols-2 lg:cols-3 gap-8. Clean, uniform but spacious.",
+      "dashboard": "High Density Grid: col-span-1 for summary, col-span-3 for main data."
+    }
+  },
+  "components": {
+    "buttons": {
+      "default": "rounded-full px-8 py-3 font-medium transition-all duration-300 hover:shadow-lg active:scale-95",
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+      "outline": "border-2 border-primary text-primary hover:bg-primary/5"
+    },
+    "cards": {
+      "style": "bg-white border border-stone-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 rounded-2xl overflow-hidden",
+      "product_card": "group relative flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-stone-100 hover:border-stone-200 transition-all duration-300"
+    },
+    "inputs": {
+      "style": "rounded-lg border-stone-200 focus:border-primary focus:ring-primary bg-stone-50/50"
+    }
+  },
+  "visual_enhancers": {
+    "textures": "Use subtle noise/grain overlay on the main background (#FDFBF7) to give it a 'paper' feel.",
+    "shadows": "Soft, diffused, warm shadows. Avoid harsh black shadows.",
+    "borders": "Soft borders: border-stone-200 or border-stone-100.",
+    "icons": "Use Phosphor Icons or Lucide React (thin strokes). Prefer earthy tones for icons."
+  },
+  "image_urls": {
+    "hero": [
+      {
+        "url": "https://images.unsplash.com/photo-1749055478900-05b689bf0e1c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwyfHxpbmRpYW4lMjBvcmdhbmljJTIwZmFybSUyMGx1c2glMjBncmVlbiUyMGZpZWxkc3xlbnwwfHx8fDE3NzAzNzcyMDR8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Green rice field, suitable for hero background"
+      },
+      {
+        "url": "https://images.pexels.com/photos/20841294/pexels-photo-20841294.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Indian farmer in field, authenticity"
+      }
+    ],
+    "categories": {
+      "oils": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwyfHxib3R0bGUlMjBvZiUyMGNvbGQlMjBwcmVzc2VkJTIwb2lsJTIwd2l0aCUyMG9saXZlcyUyMG9yJTIwc2VlZHMlMjBydXN0aWN8ZW58MHx8fHwxNzcwMzc3MjE5fDA&ixlib=rb-4.1.0&q=85",
+      "millets": "https://images.unsplash.com/photo-1563139205-b6d0e303ad58?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwyfHxib3dsJTIwb2YlMjBtaWxsZXRzJTIwZ3JhaW5zJTIwaGVhbHRoeSUyMG9yZ2FuaWMlMjBmb29kfGVufDB8fHx8MTc3MDM3NzIyMHww&ixlib=rb-4.1.0&q=85",
+      "ghee": "https://images.unsplash.com/photo-1607776944435-6d4e39104203?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwyfHxqYXIlMjBvZiUyMHB1cmUlMjBnaGVlJTIwd2l0aCUyMHdvb2RlbiUyMHNwb29uJTIwcnVzdGljJTIwaW5kaWFufGVufDB8fHx8MTc3MDM3NzIyMXww&ixlib=rb-4.1.0&q=85",
+      "spices": "https://images.unsplash.com/photo-1692826090655-385df8fbb048?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHw0fHx0cmFkaXRpb25hbCUyMGluZGlhbiUyMGJyYXNzJTIwb2lsJTIwbGFtcCUyMGFuZCUyMG9yZ2FuaWMlMjBzcGljZXN8ZW58MHx8fHwxNzcwMzc3MjA2fDA&ixlib=rb-4.1.0&q=85"
+    },
+    "logos": {
+      "main": "https://customer-assets.emergentagent.com/job_vaidya-connect-2/artifacts/nhug59x2_image.png",
+      "banner": "https://customer-assets.emergentagent.com/job_vaidya-connect-2/artifacts/qdxtjijh_image.png"
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. SETUP: Update tailwind.config.js with the colors and fonts provided in 'colors.tailwind_config_extension'.",
+    "2. FONTS: Add the Google Fonts link to public/index.html head.",
+    "3. GLOBAL CSS: Update index.css to use the new CSS variables.",
+    "4. COMPONENTS: When using Shadcn components, ALWAYS override the default radius to 'rounded-xl' or 'rounded-2xl' to match the organic feel.",
+    "5. HEADER: Use a sticky header with 'Glassmorphism' effect (backdrop-blur-md bg-white/80).",
+    "6. FOOTER: Use a dark green background (bg-primary) with light cream text (text-primary-foreground).",
+    "7. IMAGES: Use the provided image URLs for specific sections. Do not use placeholders.",
+    "8. ANIMATION: Use 'framer-motion' for subtle entrance animations (fade-in-up) on scroll."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "- Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "- Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "- Create depth through layered design elements with z-index hierarchy",
+    "- Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "- You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "- You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+    "- Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "- NEVER: use AI assistant Emoji characters like 🤖🧠💭💡 etc for icons.",
+    "- Every interaction needs micro-animations - hover states, transitions, parallax effects. Static = dead.",
+    "- Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "- Component Reuse: Prioritize using pre-existing components from src/components/ui when applicable.",
+    "- Export Conventions: Components MUST use named exports (export const ComponentName = ...), Pages MUST use default exports.",
+    "- Toasts: Use 'sonner' for toasts (src/components/ui/sonner.tsx)."
+  ]
+}
