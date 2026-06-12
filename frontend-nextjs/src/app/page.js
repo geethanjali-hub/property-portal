@@ -10,6 +10,7 @@ import {
   Phone, Mail, Shield, CheckCircle, Award, TrendingUp
 } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
+import BannerSlider from '@/components/BannerSlider';
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL || '/api').replace(/\/api$/, '');
 const API_URL  = `${API_BASE}/api`;
@@ -27,19 +28,6 @@ const HomePage = () => {
     subtype: '', search: '', city: '', water: ''
   });
 
-  const [currentMedia, setCurrentMedia] = useState(0);
-  const heroMedia = [
-    "https://videos.pexels.com/video-files/2816223/2816223-uhd_3840_2160_24fps.mp4",
-    "https://videos.pexels.com/video-files/3205307/3205307-uhd_2560_1440_25fps.mp4",
-    "https://videos.pexels.com/video-files/1448735/1448735-uhd_3840_2160_24fps.mp4"
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentMedia((prev) => (prev + 1) % heroMedia.length);
-    }, 12000);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -115,59 +103,16 @@ const HomePage = () => {
   return (
     <div className="min-h-screen" style={{ fontFamily: 'var(--font-body)', background: 'var(--off-white)' }}>
 
-      {/* ══════════════════ 1. HERO ══════════════════ */}
-      <section className="hz-hero" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden', backgroundColor: '#0a1628' }}>
-        <AnimatePresence mode="wait">
-          <motion.video
-            key={currentMedia}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1.12 }}
-            exit={{ opacity: 0 }}
-            transition={{ 
-              opacity: { duration: 2, ease: "easeInOut" },
-              scale: { duration: 12, ease: "linear" }
-            }}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="hz-hero__bg"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1.1) contrast(1.1)' }}
-          >
-            <source src={heroMedia[currentMedia]} type="video/mp4" />
-          </motion.video>
-        </AnimatePresence>
-        <div className="hz-hero__overlay" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.6) 100%)', position: 'absolute', inset: 0 }} />
-        <div className="hz-hero__overlay2" />
-
-        <div className="hz-hero__content" style={{ zIndex: 10, width: '100%', maxWidth: 900, margin: '0 auto', paddingTop: 100 }}>
-          {/* Badge */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-            className="hz-hero__badge"
-          >
-            <Sprout style={{ width: 13, height: 13 }} />
-            India's #1 Premium Organic Land Marketplace
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
-            className="hz-hero__title" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.3)' }}
-          >
-            Find Your Perfect<br /><span>Farming Land</span>
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}
-            className="hz-hero__subtitle"
-          >
-            Buy & sell verified organic farming lands, orchards and plantations with 100% legal confidence. Soil certified. Water audited. Expert guided.
-          </motion.p>
-
+      {/* ══════════════════ 1. HERO BANNER SLIDER (ARONY STYLE) ══════════════════ */}
+      <BannerSlider>
+        {/* Search tabs & Search bar Overlayed at the bottom of the slider */}
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
           {/* Search tabs */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.8 }}
-            className="hz-search-tabs"
+            initial={{ opacity: 0, scale: 0.95 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="hz-search-tabs mb-4 bg-slate-900/60 backdrop-blur-md border border-slate-700/30 rounded-full p-1"
           >
             {['buy','rent','commercial'].map(t => (
               <button key={t} className={`hz-search-tab ${activeSearchTab === t ? 'active' : ''}`}
@@ -179,25 +124,28 @@ const HomePage = () => {
 
           {/* Search bar */}
           <motion.div 
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0 }}
-            className="hz-hero__search-wrap"
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="w-full"
             style={{ 
-              background: 'rgba(255, 255, 255, 0.1)', 
+              background: 'rgba(15, 23, 42, 0.45)', 
               backdropFilter: 'blur(20px)', 
               WebkitBackdropFilter: 'blur(20px)',
-              padding: '12px', 
+              padding: '10px', 
               borderRadius: '24px', 
-              border: '1px solid rgba(255,255,255,0.2)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+              border: '1px solid rgba(255,255,255,0.1)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
             }}
           >
             <form onSubmit={handleSearch}>
-              <div className="hz-hero__search-bar">
-                <div className="hz-search-field">
-                  <Sprout className="hz-search-field__icon" style={{ color: '#3ee0aa' }} />
+              <div className="hz-hero__search-bar bg-slate-950/45 border border-white/10 rounded-full p-1.5 flex items-center">
+                <div className="hz-search-field flex items-center px-4">
+                  <Sprout className="hz-search-field__icon text-emerald-400" />
                   <select value={searchState.subtype}
                     onChange={e => setSearchState({ ...searchState, subtype: e.target.value })}
-                    aria-label="Land Type">
+                    aria-label="Land Type"
+                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2">
                     <option value="">All Land Types</option>
                     <option value="orchard">Orchard</option>
                     <option value="plantation">Plantation</option>
@@ -207,28 +155,31 @@ const HomePage = () => {
                   </select>
                 </div>
 
-                <div className="hz-search-field" style={{ flex: '2 1 0' }}>
-                  <Search className="hz-search-field__icon" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                <div className="hz-search-field flex items-center px-4 flex-[2_1_0%]">
+                  <Search className="hz-search-field__icon text-slate-400" />
                   <input type="text" placeholder="Location, keyword, survey number…"
                     value={searchState.search}
-                    onChange={e => setSearchState({ ...searchState, search: e.target.value })} />
+                    onChange={e => setSearchState({ ...searchState, search: e.target.value })}
+                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2" />
                 </div>
 
-                <div className="hz-search-field">
-                  <MapPin className="hz-search-field__icon" style={{ color: '#38bdf8' }} />
+                <div className="hz-search-field flex items-center px-4">
+                  <MapPin className="hz-search-field__icon text-sky-400" />
                   <select value={searchState.city}
                     onChange={e => setSearchState({ ...searchState, city: e.target.value })}
-                    aria-label="City">
+                    aria-label="City"
+                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2">
                     <option value="">All Cities</option>
                     {cities.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
 
-                <div className="hz-search-field">
-                  <Droplet className="hz-search-field__icon" style={{ color: '#60a5fa' }} />
+                <div className="hz-search-field flex items-center px-4">
+                  <Droplet className="hz-search-field__icon text-blue-400" />
                   <select value={searchState.water}
                     onChange={e => setSearchState({ ...searchState, water: e.target.value })}
-                    aria-label="Water Source">
+                    aria-label="Water Source"
+                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2">
                     <option value="">Water Source</option>
                     <option value="Borewell">Borewell</option>
                     <option value="Canal">Canal</option>
@@ -237,50 +188,14 @@ const HomePage = () => {
                   </select>
                 </div>
 
-                <button type="submit" className="hz-search-submit">
-                  <Search style={{ width: 16, height: 16 }} /> Search
+                <button type="submit" className="hz-search-submit bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-full px-6 py-3 font-bold transition-all flex items-center space-x-2">
+                  <Search style={{ width: 16, height: 16 }} /> <span>Search</span>
                 </button>
               </div>
             </form>
           </motion.div>
-
-          {/* Quick links */}
-          <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1.2 }}
-            className="hz-hero__quick-links"
-          >
-            <Link href="/properties" className="hz-hero__quick-btn hz-hero__quick-btn--primary">
-              <Maximize style={{ width: 14, height: 14 }} /> Browse All Lands
-            </Link>
-            <Link href="/admin" className="hz-hero__quick-btn hz-hero__quick-btn--ghost">
-              List Your Land Free
-            </Link>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.4 }}
-            className="hz-hero__stats"
-          >
-            {[
-              { value: '500+', label: 'Verified Lands' },
-              { value: '12+',  label: 'Districts' },
-              { value: '98%',  label: 'Legal Clearance' },
-              { value: '4.9★', label: 'Buyer Rating' },
-            ].map(s => (
-              <div key={s.label} className="hz-hero__stat">
-                <div className="hz-hero__stat-value">{s.value}</div>
-                <div className="hz-hero__stat-label">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
         </div>
-
-        <div className="hz-hero__scroll">
-          <div className="hz-hero__scroll-line" />
-          <div className="hz-hero__scroll-dot" />
-        </div>
-      </section>
+      </BannerSlider>
 
       {/* ══════════════════ 2. CATEGORY GRID ══════════════════ */}
       <section style={{ padding: '96px 0', background: '#fff' }}>
