@@ -126,7 +126,7 @@ const AboutPage = () => {
               <h2 className="text-4xl font-black text-neutral-900 mt-2 mb-8 tracking-tighter">Building Memories Since 2015</h2>
               <div className="space-y-6 text-neutral-600 font-medium leading-relaxed">
                 <p>
-                  Nature Party Hall was founded with a simple yet powerful vision: to provide a breathtaking natural backdrop for life's most precious celebrations in Ramanagara. What started as a modest open-air venue has grown into the region's most beloved event destination.
+                  Nature Party Hall was founded with a simple yet powerful vision: to provide a breathtaking natural backdrop for life&apos;s most precious celebrations in Ramanagara. What started as a modest open-air venue has grown into the region&apos;s most beloved event destination.
                 </p>
                 <p>
                   Over the years, we have hosted thousands of weddings, birthday parties, and corporate retreats. Our commitment to stunning aesthetics, customer satisfaction, and smooth event execution has made us a leader in the local hospitality space.
@@ -232,7 +232,7 @@ const AboutPage = () => {
                   ))}
                 </div>
                 
-                <p className="text-neutral-600 mb-10 font-medium leading-relaxed italic text-sm">"{testimonial.text}"</p>
+                <p className="text-neutral-600 mb-10 font-medium leading-relaxed italic text-sm">&quot;{testimonial.text}&quot;</p>
                 
                 <div className="flex items-center">
                   <img 

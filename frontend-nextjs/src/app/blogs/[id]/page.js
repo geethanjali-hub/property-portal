@@ -48,7 +48,7 @@ const BlogDetailPage = () => {
           <BookOpen className="w-10 h-10 text-neutral-300" />
         </div>
         <h1 className="text-3xl font-black text-neutral-900 mb-4">Article Not Found</h1>
-        <p className="text-neutral-500 mb-8 max-w-md text-center">The blog post you're looking for might have been moved or deleted.</p>
+        <p className="text-neutral-500 mb-8 max-w-md text-center">The blog post you&apos;re looking for might have been moved or deleted.</p>
         <Link href="/blogs" className="bg-[#D01F3C] text-white px-10 py-4 rounded-xl font-bold flex items-center space-x-2">
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Journal</span>
@@ -180,7 +180,7 @@ const BlogDetailPage = () => {
                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                <div className="relative z-10">
                  <h4 className="text-2xl font-black mb-4 tracking-tight leading-tight">Ready to Find Your Dream Home?</h4>
-                 <p className="text-white/80 font-medium text-sm mb-8">Browse Bangalore's most exclusive properties today.</p>
+                 <p className="text-white/80 font-medium text-sm mb-8">Browse Bangalore&apos;s most exclusive properties today.</p>
                  <Link href="/properties" className="w-full bg-white text-[#D01F3C] py-4 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 shadow-xl hover:bg-neutral-50 transition-colors">
                     View Listings
                     <ArrowRight className="w-4 h-4" />
@@ -194,7 +194,7 @@ const BlogDetailPage = () => {
                  <MessageSquare className="w-6 h-6 text-[#D01F3C]" />
                  <h4 className="text-lg font-black tracking-tight">Need Expert Advice?</h4>
                </div>
-               <p className="text-white/40 text-sm font-medium mb-6 leading-relaxed italic">"Our consultants are available 24/7 to guide you through your property journey."</p>
+               <p className="text-white/40 text-sm font-medium mb-6 leading-relaxed italic">&quot;Our consultants are available 24/7 to guide you through your property journey.&quot;</p>
                <Link href="/contact" className="w-full bg-[#D01F3C] py-4 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center">Get in Touch</Link>
             </div>
           </div>

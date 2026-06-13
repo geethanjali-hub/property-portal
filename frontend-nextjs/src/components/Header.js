@@ -4,33 +4,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from './AuthContext';
-import {
-  Menu, X, User, LogOut, Settings, ChevronDown,
-  Phone, Sprout, Heart, Plus
-} from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, ChevronDown } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const NAV_LINKS = [
+  { label: 'Buy Land', href: '/properties' },
+  { label: 'Find an Agent', href: '/contact' },
   {
-    label: 'Home',
-    href: '/',
-  },
-  {
-    label: 'Lands',
-    href: '/properties',
+    label: 'More',
+    href: '#',
     children: [
-      { label: 'All Lands', href: '/properties' },
-      { label: 'Orchards', href: '/properties?property_subtype=orchard' },
-      { label: 'Plantations', href: '/properties?property_subtype=plantation' },
-      { label: 'Agricultural Plots', href: '/properties?property_subtype=agricultural' },
-      { label: 'Dry Lands', href: '/properties?property_subtype=dry_land' },
-      { label: 'Wet Lands', href: '/properties?property_subtype=wet_land' },
-    ],
-  },
-  { label: 'Blogs', href: '/blogs' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+      { label: 'Blogs & Guides', href: '/blogs' },
+      { label: 'About Us', href: '/about' },
+    ]
+  }
 ];
+
+const LogoIcon = ({ headerTransparent }) => (
+  <svg 
+    className={`w-6 h-6 ${headerTransparent ? 'text-white' : 'text-[#0c3b2e]'}`} 
+    viewBox="0 0 24 24" 
+    fill="currentColor"
+  >
+    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+  </svg>
+);
 
 const Header = () => {
   const { user, isAdmin, logout } = useAuth();
@@ -50,11 +48,13 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdowns when route changes
   useEffect(() => {
-    setMobileOpen(false);
-    setActiveDropdown(null);
-    setShowUserMenu(false);
+    const timer = setTimeout(() => {
+      setMobileOpen(false);
+      setActiveDropdown(null);
+      setShowUserMenu(false);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   const headerTransparent = isHomepage && !scrolled;
@@ -68,61 +68,51 @@ const Header = () => {
     dropdownTimer.current = setTimeout(() => setActiveDropdown(null), 120);
   };
 
+  // SVG representation of Land.com's open-space logo is declared above
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <>
-      {/* ─── DESKTOP HEADER ─── */}
       <header
-        className={`hz-header ${headerTransparent ? 'hz-header--transparent' : 'hz-header--solid'}`}
+        className={`hz-header transition-all duration-300 ${headerTransparent ? 'hz-header--transparent py-4' : 'hz-header--solid py-3 bg-[#0c3b2e] shadow-lg'}`}
         role="banner"
       >
-        <div className="hz-header__inner">
-          {/* Logo */}
-          <Link href="/" className="hz-header__logo" aria-label="Nature Lands">
-            {headerTransparent ? (
-              <div className="hz-logo-white">
-                <Sprout className="hz-logo-icon" />
-                <div className="hz-logo-text">
-                  <span className="hz-logo-brand">NATURE LANDS</span>
-                </div>
-              </div>
-            ) : (
-              <div className="hz-logo-color">
-                <div className="hz-logo-icon-wrap">
-                  <Sprout className="hz-logo-icon-green" />
-                </div>
-                <div className="hz-logo-text">
-                  <span className="hz-logo-brand-green">NATURE LANDS</span>
-                </div>
-              </div>
-            )}
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hz-header__nav" role="navigation" aria-label="Main navigation">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          
+          {/* Left Navigation */}
+          <nav className="hidden md:flex items-center gap-6" role="navigation" aria-label="Main navigation">
             {NAV_LINKS.map((link) => (
               <div
                 key={link.label}
-                className="hz-nav-item"
+                className="relative"
                 onMouseEnter={() => link.children && handleMouseEnter(link.label)}
                 onMouseLeave={handleMouseLeave}
               >
                 <Link
                   href={link.href}
-                  className={`hz-nav-link ${headerTransparent ? 'hz-nav-link--light' : 'hz-nav-link--dark'} ${pathname === link.href ? 'hz-nav-link--active' : ''}`}
+                  className="flex items-center gap-1.5 text-sm font-semibold transition-colors hover:text-white/80 !text-white"
                 >
                   {link.label}
-                  {link.children && <ChevronDown className="hz-nav-chevron" />}
+                  {link.children && <ChevronDown className="w-3.5 h-3.5 opacity-70" />}
                 </Link>
 
                 {/* Dropdown */}
                 {link.children && activeDropdown === link.label && (
                   <div
-                    className="hz-dropdown"
+                    className="absolute top-full left-0 mt-2 min-w-[180px] bg-white border border-slate-200 rounded-xl shadow-xl p-2 z-50 animate-fade-in"
                     onMouseEnter={() => handleMouseEnter(link.label)}
                     onMouseLeave={handleMouseLeave}
                   >
                     {link.children.map((child) => (
-                      <Link key={child.label} href={child.href} className="hz-dropdown__item">
+                      <Link 
+                        key={child.label} 
+                        href={child.href} 
+                        className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0c3b2e] rounded-lg transition-colors"
+                        style={{ color: '#334155' }}
+                      >
                         {child.label}
                       </Link>
                     ))}
@@ -132,82 +122,78 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Right Actions */}
-          <div className="hz-header__actions">
-            {/* Phone */}
-            <a
-              href="tel:+918001234567"
-              className={`hz-phone-link ${headerTransparent ? 'hz-phone-link--light' : 'hz-phone-link--dark'}`}
-            >
-              <Phone className="hz-phone-icon" />
-              <span className="hz-phone-number">+91 800 123 4567</span>
-            </a>
+          {/* Centered Logo */}
+          <Link href="/" className="flex items-center gap-2.5 absolute left-1/2 -translate-x-1/2" aria-label="Land.com">
+            <LogoIcon headerTransparent={headerTransparent} />
+            <span className="font-serif text-xl md:text-2xl font-bold tracking-tight !text-white">
+              Land.com<span className="text-[10px] align-super">™</span>
+            </span>
+          </Link>
 
-            {/* User / Login */}
-            <div className="hz-user-wrap">
-              {user ? (
+          {/* Right Navigation */}
+          <div className="hidden md:flex items-center gap-5">
+            {user ? (
+              <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className={`hz-user-btn ${headerTransparent ? 'hz-user-btn--light' : 'hz-user-btn--dark'}`}
-                  aria-expanded={showUserMenu}
+                  className="text-sm font-semibold flex items-center gap-1.5 hover:opacity-90 !text-white"
                 >
-                  <User className="w-4 h-4" />
                   <span>{user.name?.split(' ')[0]}</span>
-                  <ChevronDown className="w-3 h-3" />
+                  <ChevronDown className="w-3.5 h-3.5" />
                 </button>
-              ) : (
-                <Link
-                  href="/login"
-                  className={`hz-user-btn ${headerTransparent ? 'hz-user-btn--light' : 'hz-user-btn--dark'}`}
-                >
-                  <User className="w-4 h-4" />
-                  <span>Login</span>
-                </Link>
-              )}
-
-              {/* User dropdown */}
-              {showUserMenu && user && (
-                <div className="hz-user-dropdown">
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      className="hz-user-dropdown__item"
-                      onClick={() => setShowUserMenu(false)}
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 min-w-[160px] bg-white border border-slate-200 rounded-xl shadow-xl p-2 z-50">
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0c3b2e] rounded-lg"
+                        style={{ color: '#334155' }}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        <Settings className="w-4 h-4" />
+                        Admin
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => { logout(); setShowUserMenu(false); }}
+                      className="w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg"
                     >
-                      <Settings className="w-4 h-4 text-[#28a77c]" />
-                      Admin Console
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => { logout(); setShowUserMenu(false); }}
-                    className="hz-user-dropdown__item hz-user-dropdown__item--danger"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="text-sm font-semibold hover:opacity-90 transition-opacity !text-white"
+              >
+                Sign In
+              </Link>
+            )}
 
-            {/* List Your Land CTA */}
-            <Link href="/admin" className="hz-cta-btn">
-              <Plus className="w-3.5 h-3.5" />
-              List Your Land
+            {/* Add a Listing CTA */}
+            <Link 
+              href="/admin" 
+              className="px-5 py-2.5 border !border-white rounded-lg text-sm font-semibold hover:bg-white hover:text-[#0c3b2e] transition-all !text-white"
+            >
+              Add a Listing
             </Link>
           </div>
 
           {/* Mobile Hamburger */}
           <button
-            className={`hz-hamburger ${headerTransparent ? 'hz-hamburger--light' : 'hz-hamburger--dark'}`}
+            className="md:hidden !text-white"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </header>
 
-      {/* ─── MOBILE DRAWER ─── */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -224,43 +210,36 @@ const Header = () => {
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.28 }}
-              className="hz-mobile-drawer"
+              transition={{ type: 'tween', duration: 0.25 }}
+              className="hz-mobile-drawer bg-[#0c3b2e] text-white"
             >
-              <div className="hz-mobile-drawer__header">
-                <div className="hz-logo-color">
-                  <div className="hz-logo-icon-wrap">
-                    <Sprout className="hz-logo-icon-green" />
-                  </div>
-                  <div className="hz-logo-text">
-                    <span className="hz-logo-brand-green">NATURE LANDS</span>
-                  </div>
+              <div className="hz-mobile-drawer__header border-b border-white/10">
+                <div className="flex items-center gap-2">
+                  <LogoIcon headerTransparent={headerTransparent} />
+                  <span className="font-serif text-xl font-bold text-white">Land.com™</span>
                 </div>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="hz-mobile-drawer__close"
-                >
-                  <X className="w-5 h-5" />
+                <button onClick={() => setMobileOpen(false)} className="text-white">
+                  <X className="w-6 h-6" />
                 </button>
               </div>
 
-              <div className="hz-mobile-drawer__body">
+              <div className="hz-mobile-drawer__body py-6 px-6 space-y-4">
                 {NAV_LINKS.map((link) => (
                   <div key={link.label}>
                     <Link
                       href={link.href}
-                      className={`hz-mobile-nav-link ${pathname === link.href ? 'hz-mobile-nav-link--active' : ''}`}
+                      className="block text-lg font-semibold hover:opacity-85"
                       onClick={() => !link.children && setMobileOpen(false)}
                     >
                       {link.label}
                     </Link>
                     {link.children && (
-                      <div className="hz-mobile-sub">
+                      <div className="pl-4 mt-2 space-y-2">
                         {link.children.map((child) => (
                           <Link
                             key={child.label}
                             href={child.href}
-                            className="hz-mobile-sub-link"
+                            className="block text-sm text-white/80 hover:text-white"
                             onClick={() => setMobileOpen(false)}
                           >
                             {child.label}
@@ -272,29 +251,30 @@ const Header = () => {
                 ))}
               </div>
 
-              <div className="hz-mobile-drawer__footer">
-                <a href="tel:+918001234567" className="hz-mobile-phone">
-                  <Phone className="w-4 h-4" />
-                  +91 800 123 4567
-                </a>
-                <Link href="/admin" className="hz-cta-btn w-full justify-center" onClick={() => setMobileOpen(false)}>
-                  <Plus className="w-3.5 h-3.5" />
-                  List Your Land
-                </Link>
+              <div className="hz-mobile-drawer__footer p-6 border-t border-white/10 space-y-4">
                 {user ? (
                   <button
                     onClick={() => { logout(); setMobileOpen(false); }}
-                    className="hz-mobile-logout"
+                    className="w-full py-2.5 text-center text-sm font-semibold border border-red-500 text-red-500 rounded-lg hover:bg-red-500 hover:text-white"
                   >
-                    <LogOut className="w-4 h-4" />
                     Logout
                   </button>
                 ) : (
-                  <Link href="/login" className="hz-mobile-login" onClick={() => setMobileOpen(false)}>
-                    <User className="w-4 h-4" />
-                    Login / Register
+                  <Link 
+                    href="/login" 
+                    className="block w-full py-2.5 text-center text-sm font-semibold border border-white text-white rounded-lg"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Sign In
                   </Link>
                 )}
+                <Link 
+                  href="/admin" 
+                  className="block w-full py-2.5 text-center text-sm font-semibold bg-white text-[#0c3b2e] rounded-lg"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Add a Listing
+                </Link>
               </div>
             </motion.nav>
           </>

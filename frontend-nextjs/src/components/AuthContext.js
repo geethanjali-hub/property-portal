@@ -6,22 +6,22 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    if (token && storedUser && storedUser !== 'undefined') {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error('Failed to parse stored user:', e);
-        localStorage.removeItem('user');
+  const [user, setUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+      if (token && storedUser && storedUser !== 'undefined') {
+        try {
+          return JSON.parse(storedUser);
+        } catch (e) {
+          console.error('Failed to parse stored user:', e);
+          localStorage.removeItem('user');
+        }
       }
     }
-    setLoading(false);
-  }, []);
+    return null;
+  });
+  const [loading, setLoading] = useState(false);
 
   const login = async (credentials) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';

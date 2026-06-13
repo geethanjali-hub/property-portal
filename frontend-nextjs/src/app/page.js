@@ -3,447 +3,253 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Search, MapPin, Sprout, ArrowRight, Droplet, Star, Loader2,
-  Calendar, Quote, Maximize, Building2, TreePine, Wheat, Wind,
-  Phone, Mail, Shield, CheckCircle, Award, TrendingUp
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Search, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
-import BannerSlider from '@/components/BannerSlider';
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL || '/api').replace(/\/api$/, '');
 const API_URL  = `${API_BASE}/api`;
 
 const HomePage = () => {
   const router = useRouter();
-  const [featuredProperties, setFeaturedProperties]  = useState([]);
-  const [latestProperties,   setLatestProperties]    = useState([]);
-  const [activeTab,          setActiveTab]            = useState('all');
-  const [loading,            setLoading]              = useState(true);
-  const [cities,             setCities]               = useState([]);
-  const [activeSearchTab,    setActiveSearchTab]      = useState('buy');
-
-  const [searchState, setSearchState] = useState({
-    subtype: '', search: '', city: '', water: ''
-  });
-
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     (async () => {
       try {
-        const r = await fetch(`${API_URL}/properties/cities`);
-        const d = await r.json();
-        if (Array.isArray(d)) setCities(d);
-      } catch {}
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const [fr, lr] = await Promise.all([
-          fetch(`${API_URL}/properties/featured?limit=6`),
-          fetch(`${API_URL}/properties?limit=8`),
-        ]);
-        setFeaturedProperties(await fr.json());
-        setLatestProperties(await lr.json());
+        const lr = await fetch(`${API_URL}/properties?limit=4`);
+        setProperties(await lr.json());
       } catch {}
       finally { setLoading(false); }
     })();
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
-    const p = new URLSearchParams();
-    if (searchState.subtype) p.append('property_subtype', searchState.subtype);
-    if (searchState.search)  p.append('search', searchState.search);
-    if (searchState.city)    p.append('city', searchState.city);
-    if (searchState.water)   p.append('water_source', searchState.water);
-    router.push(`/properties?${p.toString()}`);
+    if (searchValue.trim()) {
+      router.push(`/properties?search=${encodeURIComponent(searchValue.trim())}`);
+    } else {
+      router.push('/properties');
+    }
   };
 
-  const getFiltered = () =>
-    activeTab === 'all' ? latestProperties
-    : latestProperties.filter(p => (p.property_subtype || '').toLowerCase() === activeTab);
-
   /* ── DATA ── */
-  const categoryGrid = [
-    { name: 'Organic Orchards',      subtype: 'orchard',       count: '12 Listings', icon: <TreePine className="w-6 h-6" />,   image: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=900', span: 'grid-item-span-2' },
-    { name: 'Spice Plantations',     subtype: 'plantation',    count: '8 Listings',  icon: <Sprout className="w-6 h-6" />,     image: 'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=900', span: 'grid-item-col-2' },
-    { name: 'Paddy & Agro Fields',   subtype: 'agricultural',  count: '15 Listings', icon: <Wheat className="w-6 h-6" />,      image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900', span: '' },
-    { name: 'Dry Fenced Lands',      subtype: 'dry_land',      count: '6 Listings',  icon: <Wind className="w-6 h-6" />,       image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=900', span: '' },
-    { name: 'Canal Irrigated Lands', subtype: 'wet_land',      count: '8 Listings',  icon: <Droplet className="w-6 h-6" />,    image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900', span: 'grid-item-col-2' },
-    { name: 'Commercial Agro Plots', subtype: 'commercial',    count: '4 Listings',  icon: <Building2 className="w-6 h-6" />,  image: 'https://images.unsplash.com/photo-1594900161121-705b0b29841c?w=900', span: 'grid-item-col-2' },
-    { name: 'Riverfront Farms',      subtype: 'waterfront',    count: '7 Listings',  icon: <Droplet className="w-6 h-6" />,    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900', span: '' },
-    { name: 'Timber & Forestry',     subtype: 'timberland',    count: '9 Listings',  icon: <TreePine className="w-6 h-6" />,   image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=900', span: 'grid-item-span-2' },
+  const categorySlider = [
+    { name: 'Barndominiums for Sale', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700' },
+    { name: 'Farms for Sale', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=700' },
+    { name: 'Cheap Land for Sale', image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=700' }
   ];
 
-  const testimonials = [
-    { name: 'Arjun Mehta', role: 'Agro Investor, Mumbai', rating: 5, image: 'https://demo27.houzez.co/wp-content/uploads/2016/02/agent-2-150x150.png', text: 'Nature Lands made finding legal, verified agricultural lands extremely straightforward. Their soil reports and title verification gave me complete confidence before investing.' },
-    { name: 'Priya Nair',  role: 'Organic Farmer, Kerala',  rating: 5, image: 'https://demo27.houzez.co/wp-content/uploads/2016/02/agent-1-150x150.jpg', text: 'The soil chemistry analysis and water availability metrics on each property page are invaluable. I bought a 15-acre mango orchard and it is thriving beyond my expectations.' },
-    { name: 'Kathleen S.', role: 'Green Earth Trust, Delhi',   rating: 5, image: 'https://demo27.houzez.co/wp-content/uploads/2016/02/agent-5-150x150.jpg', text: 'Superb platform! Searching for plots with borewell water sources is very convenient. The transactions were smooth, legal, and entirely professional. Highly recommend.' },
+  const newsList = [
+    { 
+      date: 'June 2, 2026', 
+      title: '10 Biggest Ranches for Sale in America', 
+      image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=500',
+      excerpt: "As we head into the new year, here's a snapshot of the biggest ranches for sale throughout the United States. At a..." 
+    },
+    { 
+      date: 'June 1, 2026', 
+      title: 'The Best Outdoor Dog Breeds for Life on the Land', 
+      image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=500',
+      excerpt: 'To celebrate all that is wonderful about our canine partners in adventure, here are eight of our favorite dog breeds...' 
+    },
+    { 
+      date: 'May 31, 2026', 
+      title: 'How To Maximize Value When Selling Land in Alabama', 
+      image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500',
+      excerpt: 'With over 50,000 square miles of land area and a population surpassing 5 million people, Alabama is home to an...' 
+    },
+    { 
+      date: 'May 29, 2026', 
+      title: 'How To Best Approach Selling Land in Iowa', 
+      image: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=500',
+      excerpt: "Land is a unique commodity, and selling acreage requires a level of planning and preparation from landowners. If you're..." 
+    }
   ];
 
-  const blogs = [
-    { title: 'Top 10 Tips for Soil Preparation on Black Cotton Lands', category: 'Agronomy',   date: 'June 1, 2026',   readTime: '5 min', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=700', excerpt: 'Exact organic practices, soil amendments and moisture conservation methods to prepare black cotton soils for high-yield farming.' },
-    { title: 'Understanding Land Title Deeds & Legal Due Diligence',   category: 'Legal Guide', date: 'May 24, 2026',   readTime: '7 min', image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=700', excerpt: 'Scouting farmland is only step one. Learn about deeds, survey numbers, partition deeds and encumbrance reports in India.' },
-    { title: 'Water Security: Borewells vs Canal-fed Farm Plots',      category: 'Irrigation',  date: 'May 15, 2026',   readTime: '6 min', image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=700', excerpt: 'A comprehensive comparison of agricultural water systems. Audit local aquifers and ensure year-round reliable irrigation.' },
-    { title: 'Why Agroforestry (Sandalwood & Teak) is a Smart Asset',  category: 'Investment',  date: 'April 28, 2026', readTime: '8 min', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=700', excerpt: 'Combine agricultural income with long-term timber value. We explain the economics, regulations, and layout planning.' },
-  ];
-
-  const whyUs = [
-    { icon: <Shield className="w-6 h-6" />,       title: 'Legal Verified',     desc: '100% title-cleared listings with encumbrance certificates.' },
-    { icon: <CheckCircle className="w-6 h-6" />,  title: 'Soil Certified',     desc: 'Every plot comes with a professional soil chemistry analysis report.' },
-    { icon: <Award className="w-6 h-6" />,        title: 'Water Audited',      desc: 'Borewell yield tests and canal flow data verified independently.' },
-    { icon: <TrendingUp className="w-6 h-6" />,   title: 'High ROI Assets',    desc: 'Organic land values appreciate 12–18% annually in prime zones.' },
-  ];
-
-  /* ── RENDER ── */
   return (
-    <div className="min-h-screen" style={{ fontFamily: 'var(--font-body)', background: 'var(--off-white)' }}>
+    <div className="min-h-screen bg-white font-sans text-slate-800">
 
-      {/* ══════════════════ 1. HERO BANNER SLIDER (ARONY STYLE) ══════════════════ */}
-      <BannerSlider>
-        {/* Search tabs & Search bar Overlayed at the bottom of the slider */}
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
-          {/* Search tabs */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 0.5, delay: 0.8 }}
-            className="hz-search-tabs mb-4 bg-slate-900/60 backdrop-blur-md border border-slate-700/30 rounded-full p-1"
+      {/* ══════════════════ 1. HERO BANNER SECTION ══════════════════ */}
+      <section className="relative h-[620px] md:h-[680px] bg-black flex items-center justify-center overflow-hidden">
+        {/* Lake Sunset Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-85"
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920')` }}
+        />
+        {/* Dark overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/30" />
+
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center text-white flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mb-8"
           >
-            {['buy','rent','commercial'].map(t => (
-              <button key={t} className={`hz-search-tab ${activeSearchTab === t ? 'active' : ''}`}
-                onClick={() => setActiveSearchTab(t)}>
-                {t === 'buy' ? 'For Sale' : t === 'rent' ? 'For Lease' : 'Commercial'}
-              </button>
-            ))}
-          </motion.div>
-
-          {/* Search bar */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="w-full"
-            style={{ 
-              background: 'rgba(15, 23, 42, 0.45)', 
-              backdropFilter: 'blur(20px)', 
-              WebkitBackdropFilter: 'blur(20px)',
-              padding: '10px', 
-              borderRadius: '24px', 
-              border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
-            }}
-          >
-            <form onSubmit={handleSearch}>
-              <div className="hz-hero__search-bar bg-slate-950/45 border border-white/10 rounded-full p-1.5 flex items-center">
-                <div className="hz-search-field flex items-center px-4">
-                  <Sprout className="hz-search-field__icon text-emerald-400" />
-                  <select value={searchState.subtype}
-                    onChange={e => setSearchState({ ...searchState, subtype: e.target.value })}
-                    aria-label="Land Type"
-                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2">
-                    <option value="">All Land Types</option>
-                    <option value="orchard">Orchard</option>
-                    <option value="plantation">Plantation</option>
-                    <option value="agricultural">Agricultural</option>
-                    <option value="dry_land">Dry Land</option>
-                    <option value="wet_land">Wet Land</option>
-                  </select>
-                </div>
-
-                <div className="hz-search-field flex items-center px-4 flex-[2_1_0%]">
-                  <Search className="hz-search-field__icon text-slate-400" />
-                  <input type="text" placeholder="Location, keyword, survey number…"
-                    value={searchState.search}
-                    onChange={e => setSearchState({ ...searchState, search: e.target.value })}
-                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2" />
-                </div>
-
-                <div className="hz-search-field flex items-center px-4">
-                  <MapPin className="hz-search-field__icon text-sky-400" />
-                  <select value={searchState.city}
-                    onChange={e => setSearchState({ ...searchState, city: e.target.value })}
-                    aria-label="City"
-                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2">
-                    <option value="">All Cities</option>
-                    {cities.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-
-                <div className="hz-search-field flex items-center px-4">
-                  <Droplet className="hz-search-field__icon text-blue-400" />
-                  <select value={searchState.water}
-                    onChange={e => setSearchState({ ...searchState, water: e.target.value })}
-                    aria-label="Water Source"
-                    className="bg-transparent border-none text-white focus:outline-none w-full ml-2">
-                    <option value="">Water Source</option>
-                    <option value="Borewell">Borewell</option>
-                    <option value="Canal">Canal</option>
-                    <option value="River">River</option>
-                    <option value="Open Well">Open Well</option>
-                  </select>
-                </div>
-
-                <button type="submit" className="hz-search-submit bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-full px-6 py-3 font-bold transition-all flex items-center space-x-2">
-                  <Search style={{ width: 16, height: 16 }} /> <span>Search</span>
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        </div>
-      </BannerSlider>
-
-      {/* ══════════════════ 2. CATEGORY GRID ══════════════════ */}
-      <section style={{ padding: '96px 0', background: '#fff' }}>
-        <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 32px' }}>
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            style={{ textAlign: 'center', marginBottom: 56, maxWidth: 640, margin: '0 auto 56px' }}
-          >
-            <div className="section-chip"><Sprout style={{ width: 12, height: 12 }} /> Explore Categories</div>
-            <h2 className="section-heading">Search Your Land By Type</h2>
-            <p className="section-sub">
-              Let our advisors help you find the perfect organic farming land — with in-depth soil assessments, water yield audits and full legal verification.
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold mb-4 tracking-tight drop-shadow-lg !text-white" style={{ color: '#fff' }}>
+              Find Your Open Space
+            </h1>
+            <p className="text-lg md:text-xl font-medium text-slate-100 drop-shadow-md">
+              Find farms, ranches, acreage, country homes, and land for sale
             </p>
           </motion.div>
 
-          <div className="grid-builder-wrap">
-            {categoryGrid.map((cat, i) => (
-              <div key={i} className={`grid-item ${cat.span}`}>
-                <div className="grid-item-bg-image" style={{ backgroundImage: `url(${cat.image})` }} />
-                <Link href={`/properties?property_subtype=${cat.subtype}`} className="grid-item-link">
-                  <div className="grid-item-content">
-                    <div className="grid-item-subtitle">{cat.count}</div>
-                    <h3 className="grid-item-title">{cat.name}</h3>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
+          {/* White Pill-shaped Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="w-full max-w-2xl bg-white rounded-full p-2 shadow-2xl flex items-center border border-white/20"
+          >
+            <form onSubmit={handleSearchSubmit} className="w-full flex items-center justify-between">
+              <input 
+                type="text"
+                placeholder="Enter a State, County, City, or ID"
+                value={searchValue}
+                onChange={e => setSearchValue(e.target.value)}
+                className="w-full bg-transparent border-none text-slate-800 placeholder-slate-400 font-semibold focus:outline-none pl-6 text-base"
+              />
+              <button 
+                type="submit" 
+                className="bg-[#0c3b2e] hover:bg-[#062c22] text-white p-3.5 rounded-full transition-colors flex items-center justify-center shadow-lg"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            </form>
+          </motion.div>
         </div>
       </section>
 
-      {/* ══════════════════ 3. RECENT LISTINGS ══════════════════ */}
-      <section style={{ padding: '96px 0', background: 'var(--off-white)' }}>
-        <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 32px' }}>
+      {/* ══════════════════ 2. LAND FOR SALE IN THE UNITED STATES ══════════════════ */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, marginBottom: 48 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
           >
-            <div style={{ maxWidth: 520 }}>
-              <div className="section-chip"><TrendingUp style={{ width: 12, height: 12 }} /> New Listings</div>
-              <h2 className="section-heading">Recently Added Properties</h2>
-              <p className="section-sub">Discover fresh land listings across India — filtered by soil chemistry, water source or city.</p>
-            </div>
-
-            {/* Filter tabs */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', background: '#fff', padding: '5px', borderRadius: 999, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', gap: 4 }}>
-              {[
-                { id: 'all', label: 'All' },
-                { id: 'orchard', label: 'Orchards' },
-                { id: 'plantation', label: 'Plantations' },
-                { id: 'agricultural', label: 'Agro Plots' },
-                { id: 'dry_land', label: 'Dry Lands' },
-                { id: 'wet_land', label: 'Wet Lands' },
-              ].map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                  style={{
-                    padding: '8px 18px', borderRadius: 999, border: 'none',
-                    fontSize: 13, fontWeight: 700, letterSpacing: '0.04em',
-                    cursor: 'pointer', transition: 'all 0.2s',
-                    background: activeTab === tab.id ? 'var(--green)' : 'transparent',
-                    color: activeTab === tab.id ? '#fff' : 'var(--text-muted)',
-                    boxShadow: activeTab === tab.id ? 'var(--shadow-green)' : 'none',
-                  }}>
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-800">
+              Land for Sale in the United States
+            </h2>
           </motion.div>
 
           {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '80px 0' }}>
-              <div className="spinner" />
-            </div>
-          ) : getFiltered().length === 0 ? (
-            <div style={{ background: '#fff', borderRadius: 'var(--radius-xl)', padding: '80px 32px', textAlign: 'center', border: '1px solid var(--border)' }}>
-              <Sprout style={{ width: 56, height: 56, color: 'var(--text-faint)', margin: '0 auto 16px' }} />
-              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 24 }}>No listings found</h3>
-              <p style={{ color: 'var(--text-muted)', marginTop: 8 }}>No land listings match this filter. Check back soon!</p>
+            <div className="flex justify-center py-20">
+              <Loader2 className="animate-spin w-10 h-10 text-emerald-600" />
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 24 }}>
-              {getFiltered().map(p => <PropertyCard key={p.id} property={p} />)}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {properties.map(p => <PropertyCard key={p.id} property={p} />)}
             </div>
           )}
-
-          <div style={{ textAlign: 'center', marginTop: 48 }}>
-            <Link href="/properties" style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '14px 32px', border: '1.5px solid var(--border)',
-              borderRadius: 999, fontWeight: 700, fontSize: 14,
-              color: 'var(--green)', background: '#fff',
-              boxShadow: 'var(--shadow-sm)', transition: 'all 0.2s',
-            }}>
-              View All Properties <ArrowRight style={{ width: 15, height: 15 }} />
-            </Link>
-          </div>
         </div>
       </section>
 
+      {/* ══════════════════ 3. POPULAR LAND FOR SALE NEAR ME ══════════════════ */}
+      <section className="py-20 bg-slate-50 border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 text-center flex flex-col items-center">
+          <div className="max-w-xl mb-10">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+              Popular Land for Sale Near Me
+            </h2>
+            <p className="text-slate-500 font-semibold text-sm leading-relaxed">
+              Find land for sale including undeveloped land, residential and commercial lots, and more.
+            </p>
+          </div>
 
-      {/* ══════════════════ 5. WHY CHOOSE US ══════════════════ */}
-      <section style={{ padding: '96px 0', background: 'var(--off-white)' }}>
-        <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 32px' }}>
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            style={{ textAlign: 'center', marginBottom: 56 }}
+          <Link 
+            href="/properties" 
+            className="mb-12 bg-[#0c3b2e] hover:bg-[#062c22] text-white px-8 py-3.5 rounded-full font-bold text-sm shadow-md transition-all uppercase tracking-wider"
           >
-            <div className="section-chip"><CheckCircle style={{ width: 12, height: 12 }} /> Why Nature Lands</div>
-            <h2 className="section-heading">Why Buyers Trust Us</h2>
-            <p className="section-sub">Every listing is vetted through our 4-point assurance framework — before it appears on this portal.</p>
-          </motion.div>
+            Land for Sale Near Me
+          </Link>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 24 }}>
-            {whyUs.map((w, i) => (
-              <div key={i} style={{
-                background: '#fff', border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-xl)', padding: '36px 28px',
-                textAlign: 'center', boxShadow: 'var(--shadow-sm)',
-                transition: 'all 0.3s',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-lg)'; e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = 'rgba(40,167,124,0.25)'; }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'var(--border)'; }}
+          {/* Cards Carousel Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full relative">
+            {categorySlider.map((item, idx) => (
+              <div 
+                key={idx} 
+                className="relative rounded-2xl overflow-hidden aspect-[4/3] group shadow-sm cursor-pointer border border-slate-200"
               >
-                <div style={{
-                  width: 60, height: 60, borderRadius: '50%',
-                  background: 'var(--green-muted)', color: 'var(--green)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  margin: '0 auto 20px',
-                }}>{w.icon}</div>
-                <h3 style={{ fontFamily: 'var(--font-body)', fontSize: 17, fontWeight: 700, marginBottom: 10, color: 'var(--text-dark)' }}>{w.title}</h3>
-                <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.65 }}>{w.desc}</p>
+                {/* Background image */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center group-hover:scale-103 transition-transform duration-500" 
+                  style={{ backgroundImage: `url(${item.image})` }}
+                />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                
+                {/* Bottom title */}
+                <div className="absolute bottom-6 left-6 text-left">
+                  <h3 className="!text-white font-serif text-xl font-bold tracking-wide" style={{ color: '#fff' }}>
+                    {item.name}
+                  </h3>
+                </div>
               </div>
             ))}
+
+            {/* Pagination dots */}
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {[...Array(5)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-[#0c3b2e]' : 'bg-slate-300'}`} 
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ══════════════════ 6. TESTIMONIALS ══════════════════ */}
-      <section style={{ padding: '96px 0', background: '#fff' }}>
-        <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 32px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <img src="https://demo27.houzez.co/wp-content/uploads/2022/08/rating-stars.png" alt="5 star rating" style={{ height: 28, margin: '0 auto 14px' }} />
-            <h2 className="section-heading">What Customers Are Saying</h2>
-            <p className="section-sub">Hear from investors, farmers, and land buyers who found their perfect plot through Nature Lands.</p>
+      {/* ══════════════════ 4. NEWS FROM LAND.COM ══════════════════ */}
+      <section className="py-20 bg-[#0b221a] text-white">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
+          <div className="text-center mb-12">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold tracking-tight !text-white" style={{ color: '#fff' }}>
+              News from Land.com
+            </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
-            {testimonials.map((t, i) => (
-              <div key={i} className="testimonial-card">
-                <div>
-                  <div style={{ display: 'flex', gap: 3, marginBottom: 20 }}>
-                    {[...Array(t.rating)].map((_, j) => (
-                      <Star key={j} style={{ width: 16, height: 16, fill: '#f59e0b', color: '#f59e0b' }} />
-                    ))}
-                  </div>
-                  <p style={{ fontSize: 15, color: 'var(--text-body)', lineHeight: 1.75, fontStyle: 'italic', marginBottom: 28 }}>
-                    "{t.text}"
-                  </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-12">
+            {newsList.map((news, idx) => (
+              <div 
+                key={idx} 
+                className="bg-[#112d23] rounded-2xl border border-white/5 overflow-hidden flex flex-col h-full hover:border-white/10 transition-colors"
+              >
+                <div className="aspect-[16/10] bg-slate-800 overflow-hidden relative">
+                  <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, borderTop: '1px solid var(--border)', paddingTop: 20 }}>
-                  <img src={t.image} alt={t.name} style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--border)' }} />
+                <div className="p-5 flex-grow flex flex-col justify-between">
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-dark)' }}>{t.name}</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{t.role}</div>
+                    <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase block mb-2">{news.date}</span>
+                    <h3 className="font-sans text-base font-bold !text-white mb-2 leading-snug" style={{ color: '#fff' }}>
+                      {news.title}
+                    </h3>
+                    <p className="text-xs text-slate-300/80 font-medium leading-relaxed mb-4">
+                      {news.excerpt}
+                    </p>
                   </div>
+                  <Link href="/blogs" className="text-xs font-bold hover:underline inline-flex items-center text-white/90">
+                    Full Article &gt;
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
+
+          <Link 
+            href="/blogs" 
+            className="border border-white hover:bg-white hover:text-[#0b221a] text-white px-8 py-3.5 rounded-full font-bold text-sm tracking-wide transition-all uppercase"
+          >
+            View all articles
+          </Link>
         </div>
       </section>
 
-      {/* ══════════════════ 7. BLOG / GUIDES ══════════════════ */}
-      <section style={{ padding: '96px 0', background: 'var(--navy)' }}>
-        <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 32px' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, marginBottom: 56 }}>
-            <div>
-              <div className="section-chip" style={{ background: 'rgba(40,167,124,0.15)', color: 'var(--green-light)' }}>
-                <Calendar style={{ width: 12, height: 12 }} /> Knowledge Hub
-              </div>
-              <h2 className="section-heading light">Guide for Buyers & Sellers</h2>
-              <p className="section-sub light" style={{ maxWidth: 480 }}>
-                Immediate access to the best agricultural land buying guides, water management audits, organic farming guidelines and investment insights.
-              </p>
-            </div>
-            <Link href="/blogs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 700, color: 'var(--green-light)', marginTop: 24 }}>
-              View all articles <ArrowRight style={{ width: 14, height: 14 }} />
-            </Link>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 24 }}>
-            {blogs.map((b, i) => (
-              <Link key={i} href="/blogs" className="blog-card-dark" style={{ display: 'flex', flexDirection: 'column' }}>
-                <div className="blog-card-dark__img">
-                  <img src={b.image} alt={b.title} />
-                  <span className="tag-chip" style={{ position: 'absolute', top: 14, left: 14 }}>{b.category}</span>
-                </div>
-                <div style={{ padding: '22px 22px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                    <Calendar style={{ width: 12, height: 12, color: 'var(--text-faint)' }} />
-                    <span style={{ fontSize: 12, color: 'var(--text-faint)', fontWeight: 600 }}>{b.date}</span>
-                    <span style={{ fontSize: 12, color: 'var(--text-faint)' }}>· {b.readTime} read</span>
-                  </div>
-                  <h3 style={{ fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.4, marginBottom: 10, flex: 1 }}>{b.title}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, marginBottom: 16, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{b.excerpt}</p>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--green-light)', display: 'flex', alignItems: 'center', gap: 5, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    Continue reading <ArrowRight style={{ width: 12, height: 12 }} />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════ 8. NEWSLETTER CTA ══════════════════ */}
-      <section style={{ padding: '96px 0', background: 'var(--off-white)' }}>
-        <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 32px' }}>
-          <div className="newsletter-inner">
-            <img className="bg-img" src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1920&fit=crop" alt="farmland sunset" />
-            <div className="glow" />
-            <div className="content">
-              <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--green-light)', marginBottom: 10 }}>
-                Get Exclusive Offers
-              </span>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px,4vw,46px)', color: '#fff', marginBottom: 16, lineHeight: 1.15, fontWeight: 400 }}>
-                Start Building Your Sustainable<br /><em>Farming Future</em> With Us
-              </h2>
-              <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', marginBottom: 32, lineHeight: 1.7 }}>
-                Subscribe for first access to new verified land listings, organic farming guides, and exclusive investment offers.
-              </p>
-              <form className="newsletter-form" onSubmit={e => { e.preventDefault(); alert('Thank you! We will be in touch.'); e.target.reset(); }}>
-                <input type="email" placeholder="Enter your email address" required />
-                <button type="submit">Subscribe</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

@@ -68,7 +68,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                    <ShieldCheck className="w-6 h-6 text-[#0A9BA2]" />
                 </div>
                 <h2 className="text-4xl font-extrabold leading-tight tracking-tight mb-6">Experience <br/> The Premium <br/> Standard.</h2>
-                <p className="text-slate-400 text-sm font-medium leading-relaxed">Join Bangalore's most exclusive property network today.</p>
+                <p className="text-slate-400 text-sm font-medium leading-relaxed">Join Bangalore&apos;s most exclusive property network today.</p>
              </div>
 
              <div className="relative z-10">
@@ -176,7 +176,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   className="text-slate-400 text-xs font-bold transition-all hover:text-slate-700"
                 >
                   {isLogin ? (
-                    <span>Don't have an account? <span className="text-[#0A9BA2] font-bold uppercase tracking-wider ml-1">Join Group</span></span>
+                    <span>Don&apos;t have an account? <span className="text-[#0A9BA2] font-bold uppercase tracking-wider ml-1">Join Group</span></span>
                   ) : (
                     <span>Already a member? <span className="text-[#0A9BA2] font-bold uppercase tracking-wider ml-1">Sign In</span></span>
                   )}

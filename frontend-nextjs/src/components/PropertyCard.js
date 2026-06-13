@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, Maximize, Droplet, Sprout, Heart, Eye, ArrowRight, RefreshCw, Video } from 'lucide-react';
+import { Play, MapPin, Heart, Mail, Video } from 'lucide-react';
 import { motion } from 'framer-motion';
 import InterestModal from './InterestModal';
 
@@ -24,149 +24,134 @@ const PropertyCard = ({ property }) => {
   const images = rawImages.map(prefixImageUrl);
 
   const formatPrice = (price) => {
-    if (price >= 10000000) return `₹${(price / 10000000).toFixed(2)} Cr`;
-    if (price >= 100000)   return `₹${(price / 100000).toFixed(2)} L`;
-    return `₹${price.toLocaleString()}`;
+    if (!price) return '₹0';
+    if (price >= 10000000) {
+      return `₹${(price / 10000000).toFixed(2)} Cr`;
+    } else if (price >= 100000) {
+      return `₹${(price / 100000).toFixed(2)} L`;
+    } else {
+      return `₹${price.toLocaleString('en-IN')}`;
+    }
   };
 
-  const formatAcres = (sqft) => {
-    if (!sqft) return '— Acres';
-    return `${(sqft / 43560).toFixed(1)} Ac`;
+  const formatAcres = () => {
+    if (property.acres !== undefined && property.acres !== null) {
+      return `${parseFloat(property.acres).toLocaleString()} Acres`;
+    }
+    if (property.area_sqft) {
+      return `${(property.area_sqft / 43560).toFixed(1)} Acres`;
+    }
+    return '— Acres';
   };
+
+  const getLocationString = () => {
+    const parts = [];
+    if (property.city) parts.push(property.city);
+    if (property.state) parts.push(property.state);
+    if (property.zip_code) parts.push(property.zip_code);
+    if (property.county) parts.push(property.county);
+    return parts.join(', ');
+  };
+
+  // Mock avatar and owner names to look like premium brokers in the screenshot
+  const avatarUrl = property.builder_name === "Direct Land Sales" 
+    ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'
+    : 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150';
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col h-full group"
     >
-      <div className="item-wrap-v6 flex flex-col h-full group">
-        {/* ── Image ── */}
-        <div className="item-header relative overflow-hidden" style={{ height: 240 }}>
-          <Link href={`/properties/${property.id}`} className="block h-full">
-            <img
-              src={images[0]}
-              alt={property.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }}
-              className="group-hover:scale-105"
-            />
-          </Link>
+      {/* Rectangular Image */}
+      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 flex-shrink-0">
+        <Link href={`/properties/${property.id}`} className="block w-full h-full">
+          <img
+            src={images[0]}
+            alt={property.title}
+            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+          />
+        </Link>
 
-          {/* Price badge — floated over image */}
-          <div style={{
-            position: 'absolute', bottom: 14, left: 14, zIndex: 10,
-            background: 'linear-gradient(135deg, var(--green), var(--green-dark))',
-            color: '#fff', fontWeight: 800, fontSize: 16,
-            padding: '5px 14px', borderRadius: 999,
-            boxShadow: 'var(--shadow-green)',
-          }}>
-            {formatPrice(property.price)}
-          </div>
-
-          {/* Featured Badge */}
-          {property.is_featured && (
-            <span className="label-featured">★ Featured</span>
-          )}
-
+        {/* Overlay Icons at the bottom left */}
+        <div className="absolute bottom-3 left-3 flex items-center gap-2 z-10">
           {property.video_url && (
-            <div style={{
-              position: 'absolute', top: 14, right: 14, zIndex: 10,
-              background: 'rgba(0,0,0,0.6)', color: '#fff',
-              padding: '6px', borderRadius: '50%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}>
-              <Video className="w-4 h-4" />
+            <div className="bg-black/60 text-white p-2 rounded-full backdrop-blur-sm shadow-md">
+              <Play className="w-4 h-4 fill-current" />
             </div>
           )}
+          <div className="bg-black/60 text-white p-2 rounded-full backdrop-blur-sm shadow-md">
+            <MapPin className="w-4 h-4" />
+          </div>
+        </div>
+      </div>
 
-          {/* Status Badges */}
-          <div className="label-status-wrap">
-            <span className="label-status">For Sale</span>
-            <span className="label-status status-new">New</span>
+      {/* Card Details Body */}
+      <div className="p-4 flex-grow flex flex-col justify-between">
+        <div className="flex justify-between items-start gap-4">
+          <div className="flex-grow min-w-0">
+            {/* Price & Acres */}
+            <h3 className="font-extrabold text-slate-800 text-lg leading-tight mb-1">
+              {formatPrice(property.price)} <span className="text-slate-400 font-medium mx-1.5">•</span> {formatAcres()}
+            </h3>
+
+            {/* Beds / Baths / Sqft line (if available, otherwise fallback) */}
+            <p className="text-xs font-semibold text-slate-500 mb-1 leading-normal">
+              {property.bedrooms > 0 ? `${property.bedrooms} beds` : 'Vacant Land'} 
+              {property.bathrooms > 0 && ` · ${property.bathrooms} baths`}
+              {property.area_sqft > 0 && ` · ${property.area_sqft.toLocaleString()} sqft`}
+            </p>
+
+            {/* Full Location */}
+            <p className="text-xs font-semibold text-slate-500 truncate leading-normal">
+              {getLocationString()}
+            </p>
           </div>
 
-          {/* Hover Tools */}
-          <div className="item-tools">
-            <Link href={`/properties/${property.id}`} className="item-tool-btn" title="View Details">
-              <Eye className="w-4 h-4" />
-            </Link>
+          {/* Right Action Icons */}
+          <div className="flex items-center gap-2.5 flex-shrink-0 pt-0.5">
             <button
-              onClick={e => { e.preventDefault(); setIsFavorited(!isFavorited); }}
-              className="item-tool-btn"
-              title="Favourite"
-              style={isFavorited ? { background: 'var(--green)', color: '#fff' } : {}}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsFavorited(!isFavorited);
+              }}
+              className={`p-2 rounded-full border border-slate-200 transition-colors ${
+                isFavorited ? 'bg-red-50 border-red-200 text-red-500' : 'hover:bg-slate-50 text-slate-400 hover:text-slate-700'
+              }`}
+              title="Save Listing"
             >
-              <Heart className="w-4 h-4" style={isFavorited ? { fill: '#fff' } : {}} />
+              <Heart className={`w-4 h-4 ${isFavorited ? 'fill-current' : ''}`} />
             </button>
             <button
-              onClick={e => { e.preventDefault(); alert('Added to compare list!'); }}
-              className="item-tool-btn"
-              title="Compare"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowInterestModal(true);
+              }}
+              className="p-2 rounded-full border border-slate-200 hover:bg-slate-50 text-slate-400 hover:text-slate-700 transition-colors"
+              title="Contact Owner"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <Mail className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* ── Body ── */}
-        <div className="item-body flex-grow flex flex-col justify-between">
-          <div>
-            {/* Location */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 8 }}>
-              <MapPin style={{ width: 13, height: 13, color: 'var(--green)', flexShrink: 0 }} />
-              {property.area}, {property.city}
-            </div>
-
-            {/* Title */}
-            <h3 style={{ marginBottom: 12 }}>
-              <Link href={`/properties/${property.id}`} className="item-title-link" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                {property.title}
-              </Link>
-            </h3>
-          </div>
-
-          <div>
-            {/* Meta row */}
-            <div className="item-meta-row" style={{ marginBottom: 16 }}>
-              <div className="item-meta-item" style={{ flex: 1, justifyContent: 'center' }}>
-                <Maximize style={{ width: 14, height: 14, marginRight: 5, color: 'var(--text-faint)' }} />
-                <span>{formatAcres(property.area_sqft)}</span>
-              </div>
-              <div style={{ width: 1, background: 'var(--border)', alignSelf: 'stretch', margin: '2px 0' }} />
-              <div className="item-meta-item" style={{ flex: 1, justifyContent: 'center', overflow: 'hidden' }}>
-                <Droplet style={{ width: 14, height: 14, marginRight: 5, color: '#60a5fa', flexShrink: 0 }} />
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {property.water_source ? property.water_source.split('&')[0].split(' ')[0] : 'N/A'}
-                </span>
-              </div>
-              <div style={{ width: 1, background: 'var(--border)', alignSelf: 'stretch', margin: '2px 0' }} />
-              <div className="item-meta-item" style={{ flex: 1, justifyContent: 'center', overflow: 'hidden' }}>
-                <Sprout style={{ width: 14, height: 14, marginRight: 5, color: 'var(--green)', flexShrink: 0 }} />
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {property.soil_type ? property.soil_type.split(' ')[0] : 'N/A'}
-                </span>
-              </div>
-            </div>
-
-            {/* CTA row */}
-            <div style={{ borderTop: '1px solid var(--border)', paddingTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <button
-                onClick={e => { e.preventDefault(); setShowInterestModal(true); }}
-                style={{
-                  background: 'none', border: 'none', padding: 0,
-                  fontSize: 12, fontWeight: 800, color: 'var(--green)',
-                  letterSpacing: '0.07em', textTransform: 'uppercase',
-                  display: 'flex', alignItems: 'center', gap: 5,
-                  cursor: 'pointer', transition: 'color 0.2s',
-                }}
-              >
-                Enquire Now <ArrowRight style={{ width: 13, height: 13 }} />
-              </button>
-              <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {new Date(property.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: '2-digit' })}
-              </div>
-            </div>
+        {/* Footer Row matching Agent Layout */}
+        <div className="border-t border-slate-100 mt-4 pt-3 flex items-center gap-2.5 flex-shrink-0">
+          <img 
+            src={avatarUrl} 
+            alt="Listing Owner" 
+            className="w-8 h-8 rounded-full object-cover border border-slate-200"
+          />
+          <div className="min-w-0">
+            <p className="text-xs font-bold text-slate-700 truncate leading-none mb-0.5">
+              {property.builder_name || 'Direct Owner Sales'}
+            </p>
+            <p className="text-[10px] font-semibold text-slate-400 truncate leading-none">
+              {property.builder_info || 'Direct Land Sales Agent'}
+            </p>
           </div>
         </div>
       </div>

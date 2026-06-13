@@ -43,8 +43,9 @@ const AdminBlogs = () => {
   const fetchBlogs = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
+    const API_URL = (process.env.NEXT_PUBLIC_API_URL || '/api').replace(/\/api$/, '');
     try {
-      const response = await axios.get(`${API_URL}/api/blogs`, {
+      const response = await axios.get(`${API_URL}/api/admin/blogs`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBlogs(response.data);
@@ -169,31 +170,62 @@ const AdminBlogs = () => {
   if (authLoading || (isAdmin && loading)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-900">
-        <Loader2 className="w-12 h-12 animate-spin text-[#D01F3C]" />
+        <Loader2 className="w-12 h-12 animate-spin text-[#ff914d]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8 font-poppins text-neutral-800">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <Link href="/admin" className="flex items-center text-gray-500 hover:text-[#D01F3C] mb-2 transition-colors group">
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Dashboard
-            </Link>
-            <h1 className="text-3xl font-black text-neutral-900 tracking-tight">Blog <span className="text-[#D01F3C]">Management</span></h1>
+    <div className="min-h-screen bg-[#f8faf6] font-sans text-slate-800">
+      {/* Header */}
+      <div className="bg-[#0b221a] text-white py-20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff914d]/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#6d9773]/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="flex items-center space-x-6">
+              <Link href="/admin" className="w-12 h-12 bg-[#0c3b2e] border border-white/10 hover:bg-[#ff914d] !text-white rounded-2xl flex items-center justify-center transition-all group backdrop-blur-md cursor-pointer" style={{ color: '#ffffff' }}>
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              </Link>
+              <div>
+                <h1 className="text-4xl font-serif font-bold !text-white tracking-tight" style={{ color: '#ffffff' }}>Blog <span className="text-[#ff914d]">Articles.</span></h1>
+                <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Content Management System</p>
+              </div>
+            </div>
+            <button
+              onClick={() => openModal()}
+              className="bg-[#0c3b2e] !text-white hover:bg-[#ff914d] px-10 py-4 rounded-full font-bold text-sm shadow-md transition-all flex items-center space-x-2 active:scale-95 cursor-pointer border border-white/10"
+              style={{ color: '#ffffff' }}
+            >
+              <Plus className="w-5 h-5" />
+              <span>Create Post</span>
+            </button>
           </div>
-          <button
-            onClick={() => openModal()}
-            className="flex items-center justify-center bg-[#D01F3C] text-white px-6 py-3 rounded-2xl font-bold hover:bg-[#B01A33] transition-all shadow-lg active:scale-95 text-sm"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Create Post
-          </button>
         </div>
+      </div>
+
+      {/* Shared Admin Tab Navigation Bar */}
+      <div className="bg-[#0b221a] text-white/80 border-t border-b border-white/10 relative z-20">
+        <div className="max-w-7xl mx-auto px-6 flex flex-wrap gap-1">
+          <Link href="/admin" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Dashboard
+          </Link>
+          <Link href="/admin/properties" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Manage Listings
+          </Link>
+          <Link href="/admin/interests" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Prospect Leads
+          </Link>
+          <Link href="/admin/contacts" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Inquiry Inbox
+          </Link>
+          <Link href="/admin/blogs" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-[#ff914d] text-white bg-white/5 transition-all">
+            Blog Articles
+          </Link>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-16">
 
         {/* Filters */}
         <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8">
@@ -204,7 +236,7 @@ const AdminBlogs = () => {
               placeholder="Search blogs by title or author..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#D01F3C]/20 transition-all text-sm"
+              className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#ff914d]/10 transition-all text-sm"
             />
           </div>
         </div>
@@ -264,21 +296,21 @@ const AdminBlogs = () => {
                         <Link
                           href={`/blogs/${blog.id}`}
                           target="_blank"
-                          className="p-2 text-gray-400 hover:text-[#D01F3C] transition-colors bg-gray-50 rounded-xl"
+                          className="p-2 text-gray-400 hover:text-[#ff914d] transition-colors bg-gray-50 rounded-xl"
                           title="View"
                         >
                           <Eye className="w-4 h-4" />
                         </Link>
                         <button
                           onClick={() => openModal(blog)}
-                          className="p-2 text-gray-400 hover:text-[#D01F3C] transition-colors bg-gray-50 rounded-xl"
+                          className="p-2 text-gray-400 hover:text-[#ff914d] transition-colors bg-gray-50 rounded-xl"
                           title="Edit"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => deleteBlog(blog.id)}
-                          className="p-2 text-gray-400 hover:text-[#D01F3C] transition-colors bg-gray-50 rounded-xl"
+                          className="p-2 text-gray-400 hover:text-[#ff914d] transition-colors bg-gray-50 rounded-xl"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -317,7 +349,7 @@ const AdminBlogs = () => {
             >
               <div className="p-8 border-b border-gray-100 flex items-center justify-between bg-white relative z-10">
                 <h2 className="text-2xl font-black text-neutral-900">
-                  {editingBlog ? 'Edit' : 'Create'} Blog <span className="text-[#D01F3C]">Post</span>
+                  {editingBlog ? 'Edit' : 'Create'} Blog <span className="text-[#ff914d]">Post</span>
                 </h2>
                 <button
                   onClick={closeModal}
@@ -334,7 +366,7 @@ const AdminBlogs = () => {
                     <label className="text-xs font-black uppercase tracking-widest text-gray-500">Featured Image</label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div 
-                        className="relative group aspect-video rounded-3xl bg-neutral-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center overflow-hidden hover:border-[#D01F3C]/50 transition-colors cursor-pointer"
+                        className="relative group aspect-video rounded-3xl bg-neutral-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center overflow-hidden hover:border-[#ff914d]/50 transition-colors cursor-pointer"
                         onClick={() => document.getElementById('imageInput').click()}
                       >
                         {formData.image_url ? (
@@ -367,7 +399,7 @@ const AdminBlogs = () => {
                             value={formData.image_url}
                             onChange={handleInputChange}
                             placeholder="https://..."
-                            className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#D01F3C]/20 transition-all text-sm"
+                            className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#ff914d]/10 transition-all text-sm"
                           />
                         </div>
                       </div>
@@ -384,7 +416,7 @@ const AdminBlogs = () => {
                         value={formData.title}
                         onChange={handleInputChange}
                         placeholder="Expert tips for first-time buyers..."
-                        className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#D01F3C]/20 transition-all text-sm font-bold"
+                        className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#ff914d]/10 transition-all text-sm font-bold"
                       />
                     </div>
                     <div className="space-y-2">
@@ -395,7 +427,7 @@ const AdminBlogs = () => {
                         name="author_name"
                         value={formData.author_name}
                         onChange={handleInputChange}
-                        className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#D01F3C]/20 transition-all text-sm"
+                        className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#ff914d]/10 transition-all text-sm"
                       />
                     </div>
                   </div>
@@ -408,7 +440,7 @@ const AdminBlogs = () => {
                       onChange={handleInputChange}
                       rows="2"
                       placeholder="A brief summary of the post..."
-                      className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#D01F3C]/20 transition-all text-sm resize-none"
+                      className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#ff914d]/10 transition-all text-sm resize-none"
                     ></textarea>
                   </div>
 
@@ -421,7 +453,7 @@ const AdminBlogs = () => {
                       onChange={handleInputChange}
                       rows="10"
                       placeholder="Write your blog post content here..."
-                      className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#D01F3C]/20 transition-all text-sm font-medium leading-relaxed"
+                      className="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#ff914d]/10 transition-all text-sm font-medium leading-relaxed"
                     ></textarea>
                   </div>
 
@@ -432,7 +464,7 @@ const AdminBlogs = () => {
                       name="is_published"
                       checked={formData.is_published}
                       onChange={handleInputChange}
-                      className="w-5 h-5 rounded border-gray-300 text-[#D01F3C] focus:ring-[#D01F3C]/20"
+                      className="w-5 h-5 rounded border-gray-300 text-[#ff914d] focus:ring-[#ff914d]/10"
                     />
                     <label htmlFor="is_published" className="text-sm font-bold text-neutral-700">Publish this post immediately</label>
                   </div>
@@ -444,7 +476,7 @@ const AdminBlogs = () => {
                   type="submit"
                   form="blogForm"
                   disabled={saving}
-                  className="flex-1 bg-[#D01F3C] text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-[#B01A33] transition-all flex items-center justify-center shadow-xl disabled:opacity-50 active:scale-95"
+                  className="flex-1 bg-[#0c3b2e] text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-[#ff914d] transition-all flex items-center justify-center shadow-xl disabled:opacity-50 active:scale-95"
                 >
                   {saving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Send className="w-4 h-4 mr-2" />}
                   {editingBlog ? 'Update Post' : 'Publish Post'}

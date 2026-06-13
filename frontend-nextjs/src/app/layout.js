@@ -1,4 +1,3 @@
-import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthContext";
 import Header from "@/components/Header";
@@ -7,17 +6,8 @@ import { Toaster } from "sonner";
 import ScrollToTop from "@/components/ScrollToTop";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  display: "swap",
-});
+const inter = { variable: "font-sans" };
+const outfit = { variable: "font-sans" };
 
 export const metadata = {
   title: {

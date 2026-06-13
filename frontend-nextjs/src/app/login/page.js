@@ -62,7 +62,7 @@ const LoginContent = () => {
                 <ShieldCheck className="w-6 h-6 text-white" />
              </div>
              <h2 className="text-4xl font-black leading-tight tracking-tighter mb-6">Experience <br/> The Premium <br/> Standard.</h2>
-             <p className="text-white/80 text-sm font-medium leading-relaxed">Join Bangalore's most exclusive property network today.</p>
+             <p className="text-white/80 text-sm font-medium leading-relaxed">Join Bangalore&apos;s most exclusive property network today.</p>
            </div>
 
            <div className="relative z-10">
@@ -172,7 +172,7 @@ const LoginContent = () => {
                 className="text-neutral-400 text-xs font-bold transition-all hover:text-neutral-900"
               >
                 {isLogin ? (
-                  <span>Don't have an account? <span className="text-[#D01F3C] font-black uppercase tracking-widest ml-1">Join Group</span></span>
+                  <span>Don&apos;t have an account? <span className="text-[#D01F3C] font-black uppercase tracking-widest ml-1">Join Group</span></span>
                 ) : (
                   <span>Already a member? <span className="text-[#D01F3C] font-black uppercase tracking-widest ml-1">Sign In</span></span>
                 )}

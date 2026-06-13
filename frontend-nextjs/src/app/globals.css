@@ -1,27 +1,28 @@
+@import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════
-   DESIGN TOKENS
+   DESIGN TOKENS - Land.com Forest Green & Accent Orange
    ═══════════════════════════════════════════════ */
 :root {
-  /* Brand Colors - Premium Nature */
-  --green:        #065f46;  /* Deep Emerald */
-  --green-dark:   #064e3b;
-  --green-light:  #34d399;
-  --green-muted:  rgba(6, 95, 70, 0.08);
+  /* Brand Colors - Premium Land.com */
+  --green:        #0c3b2e;  /* Deep Forest Green */
+  --green-dark:   #062c22;
+  --green-light:  #6d9773;
+  --green-muted:  rgba(12, 59, 46, 0.08);
 
   --navy:         #0f172a;  /* Slate 900 */
   --navy-mid:     #1e293b;
   --navy-light:   #334155;
 
-  --blue-accent:  #d4af37;  /* Champagne Gold Accent */
+  --blue-accent:  #ff914d;  /* Vibrant Land.com Accent Orange */
 
   /* Neutral Palette */
   --white:        #ffffff;
-  --off-white:    #fafafa;  /* Softer background for clarity */
+  --off-white:    #f8faf6;  /* Soft cream background for high-end feel */
   --border:       #e2e8f0;
   --text-dark:    #0f172a;
-  --text-body:    #475569;
+  --text-body:    #334155;
   --text-muted:   #64748b;
   --text-faint:   #94a3b8;
 
@@ -30,48 +31,50 @@
   --font-heading: var(--font-outfit), system-ui, sans-serif;
 
   /* Spacing / Radius */
-  --radius-sm:    10px;
-  --radius-md:    16px;
-  --radius-lg:    24px;
-  --radius-xl:    32px;
+  --radius-sm:    8px;
+  --radius-md:    12px;
+  --radius-lg:    16px;
+  --radius-xl:    24px;
   --radius-pill:  999px;
 
   /* Shadows - Softer & More Diffused for Premium Feel */
   --shadow-sm:    0 4px 12px rgba(0,0,0,0.03);
-  --shadow-md:    0 12px 28px -4px rgba(0,0,0,0.04);
-  --shadow-lg:    0 20px 40px -8px rgba(0,0,0,0.06);
-  --shadow-green: 0 12px 30px rgba(6, 95, 70, 0.15);
+  --shadow-md:    0 8px 20px -4px rgba(0,0,0,0.05);
+  --shadow-lg:    0 16px 32px -8px rgba(0,0,0,0.08);
+  --shadow-green: 0 12px 30px rgba(12, 59, 46, 0.12);
 }
 
 /* ═══════════════════════════════════════════════
    GLOBAL BASE
    ═══════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; }
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; }
 
-body {
-  font-family: var(--font-body);
-  background-color: var(--off-white);
-  color: var(--text-body);
-  font-size: 16px;
-  line-height: 1.65;
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  body {
+    font-family: var(--font-body);
+    background-color: var(--off-white);
+    color: var(--text-body);
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--text-dark);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+  button { cursor: pointer; font-family: var(--font-body); }
 }
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--text-dark);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  margin: 0;
-}
-
-a { color: inherit; text-decoration: none; }
-img { max-width: 100%; display: block; }
-button { cursor: pointer; font-family: var(--font-body); }
 
 /* Selection */
 ::selection { background: var(--green); color: #fff; }

@@ -301,8 +301,8 @@ const AdminProperties = () => {
 
   if (authLoading || (isAdmin && loading)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-        <Loader2 className="w-12 h-12 animate-spin text-[#0A9BA2]" />
+      <div className="min-h-screen flex items-center justify-center bg-[#0b221a]">
+        <Loader2 className="w-12 h-12 animate-spin text-[#ff914d]" />
       </div>
     );
   }
@@ -310,24 +310,26 @@ const AdminProperties = () => {
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-sans">
+    <div className="min-h-screen bg-[#f8faf6] font-sans text-slate-800">
       {/* Header */}
-      <div className="bg-[#0c162c] text-white py-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#0A9BA2]/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+      <div className="bg-[#0b221a] text-white py-20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff914d]/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#6d9773]/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="flex items-center space-x-6">
-              <Link href="/admin" className="w-12 h-12 bg-white/10 border border-white/10 hover:bg-white/20 rounded-2xl flex items-center justify-center transition-all group backdrop-blur-md cursor-pointer">
+              <Link href="/admin" className="w-12 h-12 bg-[#0c3b2e] border border-white/10 hover:bg-[#ff914d] !text-white rounded-2xl flex items-center justify-center transition-all group backdrop-blur-md cursor-pointer" style={{ color: '#ffffff' }}>
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               </Link>
               <div>
-                <h1 className="text-4xl font-extrabold tracking-tight font-heading">Farming <span className="text-[#0A9BA2]">Lands.</span></h1>
+                <h1 className="text-4xl font-serif font-bold !text-white tracking-tight" style={{ color: '#ffffff' }}>Farming <span className="text-[#ff914d]">Lands.</span></h1>
                 <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Portfolio Management System</p>
               </div>
             </div>
             <button
               onClick={() => openModal()}
-              className="bg-[#0A9BA2] text-white hover:bg-[#087d83] px-10 py-4 rounded-full font-bold text-sm shadow-md transition-all flex items-center space-x-2 active:scale-95 cursor-pointer"
+              className="bg-[#0c3b2e] !text-white hover:bg-[#ff914d] px-10 py-4 rounded-full font-bold text-sm shadow-md transition-all flex items-center space-x-2 active:scale-95 cursor-pointer border border-white/10"
+              style={{ color: '#ffffff' }}
             >
               <Plus className="w-5 h-5" />
               <span>Create Listing</span>
@@ -336,21 +338,42 @@ const AdminProperties = () => {
         </div>
       </div>
 
+      {/* Shared Admin Tab Navigation Bar */}
+      <div className="bg-[#0b221a] text-white/80 border-t border-b border-white/10 relative z-20">
+        <div className="max-w-7xl mx-auto px-6 flex flex-wrap gap-1">
+          <Link href="/admin" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Dashboard
+          </Link>
+          <Link href="/admin/properties" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-[#ff914d] text-white bg-white/5 transition-all">
+            Manage Listings
+          </Link>
+          <Link href="/admin/interests" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Prospect Leads
+          </Link>
+          <Link href="/admin/contacts" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Inquiry Inbox
+          </Link>
+          <Link href="/admin/blogs" className="px-6 py-4.5 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-white/60 hover:text-white hover:bg-white/5 transition-all">
+            Blog Articles
+          </Link>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Search & Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
           <div className="relative max-w-md w-full group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#0A9BA2] transition-colors" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#ff914d] transition-colors" />
             <input
               type="text"
               placeholder="Filter assets by name or city..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-16 pr-8 py-4 bg-white border border-slate-200 rounded-3xl shadow-sm focus:border-[#0A9BA2] focus:ring-4 focus:ring-[#0A9BA2]/5 outline-none transition-all font-semibold text-sm"
+              className="w-full pl-16 pr-8 py-4 bg-white border border-slate-200 rounded-3xl shadow-sm focus:border-[#ff914d] focus:ring-4 focus:ring-[#ff914d]/5 outline-none transition-all font-semibold text-sm"
             />
           </div>
-          <div className="flex items-center bg-white border border-slate-200/50 p-2 rounded-2xl shadow-sm">
-             <div className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-[#0A9BA2] border-r border-slate-100">Catalog View</div>
+          <div className="flex items-center bg-white border border-slate-200 p-2 rounded-2xl shadow-sm">
+             <div className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-[#ff914d] border-r border-slate-100">Catalog View</div>
              <div className="px-6 py-3 font-bold text-sm text-slate-800">{filteredProperties.length} Lands Online</div>
           </div>
         </div>
@@ -358,7 +381,7 @@ const AdminProperties = () => {
         {/* Properties Grid (Custom Card Style for Admin) */}
         <div className="grid gap-6">
           {filteredProperties.map((property) => (
-            <div key={property.id} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 hover:border-[#0A9BA2]/30 transition-all group">
+            <div key={property.id} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/60 hover:border-[#ff914d]/30 transition-all group">
               <div className="flex flex-col lg:flex-row lg:items-center gap-8">
                 {/* Image Preview */}
                 <div className="w-full lg:w-48 h-32 rounded-2xl overflow-hidden bg-slate-100 relative shadow-inner">
@@ -377,13 +400,13 @@ const AdminProperties = () => {
                 {/* Info */}
                 <div className="flex-1 space-y-3">
                   <div className="flex items-center space-x-3 mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#0A9BA2] bg-[#0A9BA2]/10 px-2.5 py-1 rounded-lg">{property.property_subtype}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#0c3b2e] bg-[#0c3b2e]/10 px-2.5 py-1 rounded-lg">{property.property_subtype}</span>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">ID: {property.id?.slice(-6)}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 tracking-tight">{property.title}</h3>
+                  <h3 className="text-xl font-bold text-slate-800 tracking-tight font-serif">{property.title}</h3>
                   <div className="flex flex-wrap gap-4 text-xs font-semibold text-slate-500">
-                    <span className="flex items-center"><TrendingUp className="w-3.5 h-3.5 mr-1 text-[#1976D2]" /> {formatPrice(property.price)}</span>
-                    <span className="flex items-center"><Sprout className="w-3.5 h-3.5 mr-1 text-[#0A9BA2]" /> {property.city}, {property.area}</span>
+                    <span className="flex items-center"><TrendingUp className="w-3.5 h-3.5 mr-1 text-[#ff914d]" /> {formatPrice(property.price)}</span>
+                    <span className="flex items-center"><Sprout className="w-3.5 h-3.5 mr-1 text-[#0c3b2e]" /> {property.city}, {property.area}</span>
                     <span className="flex items-center"><Eye className="w-3.5 h-3.5 mr-1 text-slate-400" /> {property.interest_count || 0} Leads Received</span>
                   </div>
                 </div>
@@ -397,7 +420,7 @@ const AdminProperties = () => {
                   )}
                   <button
                     onClick={() => openModal(property)}
-                    className="flex-1 lg:flex-none px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#0A9BA2] transition-colors cursor-pointer"
+                    className="flex-1 lg:flex-none px-6 py-3 bg-[#0c3b2e] text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#ff914d] transition-colors cursor-pointer"
                   >
                     Edit
                   </button>
@@ -442,7 +465,7 @@ const AdminProperties = () => {
               {/* Basic Section */}
               <div className="grid md:grid-cols-2 gap-8">
                  <div className="space-y-6">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#0A9BA2]">Core Parameters</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#0c3b2e]">Core Parameters</h3>
                     <div className="space-y-4">
                       <input
                         type="text"
@@ -450,14 +473,14 @@ const AdminProperties = () => {
                         placeholder="Land Listing Title *"
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#0A9BA2] outline-none transition-all"
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#ff914d] outline-none transition-all"
                       />
                       <textarea
                         rows={5}
                         placeholder="Land & Soil Technical Description"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#0A9BA2] outline-none transition-all resize-none"
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#ff914d] outline-none transition-all resize-none"
                       />
                     </div>
                  </div>
@@ -498,17 +521,17 @@ const AdminProperties = () => {
                         required
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#0A9BA2] outline-none transition-all"
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#ff914d] outline-none transition-all"
                       />
                     </div>
                     
                     <div className="flex items-center space-x-4">
                        <label className="flex-1 flex items-center p-4 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 border border-slate-200 transition-colors">
-                          <input type="radio" checked={formData.price_type === 'sale'} onChange={() => setFormData({...formData, price_type: 'sale'})} className="accent-[#0A9BA2]" />
+                          <input type="radio" checked={formData.price_type === 'sale'} onChange={() => setFormData({...formData, price_type: 'sale'})} className="accent-[#ff914d]" />
                           <span className="ml-3 text-[10px] font-bold uppercase tracking-widest text-slate-700">Sale</span>
                        </label>
                        <label className="flex-1 flex items-center p-4 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 border border-slate-200 transition-colors">
-                          <input type="radio" checked={formData.price_type === 'rent'} onChange={() => setFormData({...formData, price_type: 'rent'})} className="accent-[#0A9BA2]" />
+                          <input type="radio" checked={formData.price_type === 'rent'} onChange={() => setFormData({...formData, price_type: 'rent'})} className="accent-[#ff914d]" />
                           <span className="ml-3 text-[10px] font-bold uppercase tracking-widest text-slate-700">Lease</span>
                        </label>
                     </div>
@@ -517,7 +540,7 @@ const AdminProperties = () => {
 
               {/* Geographic Data */}
               <div className="space-y-6">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#0A9BA2]">Geographic Data</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#0c3b2e]">Geographic Data</h3>
                 <div className="grid md:grid-cols-3 gap-4">
                   <input
                     type="text"
@@ -525,7 +548,7 @@ const AdminProperties = () => {
                     placeholder="City / District *"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:bg-white focus:border-[#0A9BA2]"
+                    className="px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:bg-white focus:border-[#ff914d]"
                   />
                   <input
                     type="text"
@@ -533,67 +556,67 @@ const AdminProperties = () => {
                     placeholder="Area / Taluk *"
                     value={formData.area}
                     onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-                    className="px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:bg-white focus:border-[#0A9BA2]"
+                    className="px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:bg-white focus:border-[#ff914d]"
                   />
                   <input
                     type="text"
                     placeholder="Survey Number / Location"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:bg-white focus:border-[#0A9BA2]"
+                    className="px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:bg-white focus:border-[#ff914d]"
                   />
                 </div>
               </div>
 
               {/* Technical Specifications */}
               <div className="space-y-6">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#0A9BA2]">Farming Specifications</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#0c3b2e]">Farming Specifications</h3>
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-2">Area (Sq.Ft - 1 Acre = 43560)</label>
-                    <input type="number" required placeholder="Area in SqFt" value={formData.area_sqft} onChange={(e) => setFormData({ ...formData, area_sqft: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#0A9BA2]" />
+                    <input type="number" required placeholder="Area in SqFt" value={formData.area_sqft} onChange={(e) => setFormData({ ...formData, area_sqft: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#ff914d]" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-2">Soil Chemistry Type</label>
-                    <input type="text" placeholder="Soil (e.g. Red Alluvial Clay)" value={formData.soil_type} onChange={(e) => setFormData({ ...formData, soil_type: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#0A9BA2]" />
+                    <input type="text" placeholder="Soil (e.g. Red Alluvial Clay)" value={formData.soil_type} onChange={(e) => setFormData({ ...formData, soil_type: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#ff914d]" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-2">Water Source Details</label>
-                    <input type="text" placeholder="Water (e.g. 2 Borewells)" value={formData.water_source} onChange={(e) => setFormData({ ...formData, water_source: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#0A9BA2]" />
+                    <input type="text" placeholder="Water (e.g. 2 Borewells)" value={formData.water_source} onChange={(e) => setFormData({ ...formData, water_source: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#ff914d]" />
                   </div>
                 </div>
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-2">Crop History / Suitability</label>
-                    <input type="text" placeholder="Crops (e.g. Mango, Turmeric)" value={formData.crop_history} onChange={(e) => setFormData({ ...formData, crop_history: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#0A9BA2]" />
+                    <input type="text" placeholder="Crops (e.g. Mango, Turmeric)" value={formData.crop_history} onChange={(e) => setFormData({ ...formData, crop_history: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#ff914d]" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-2">Fencing Type</label>
-                    <input type="text" placeholder="Fencing (e.g. Electric Fenced)" value={formData.fencing} onChange={(e) => setFormData({ ...formData, fencing: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#0A9BA2]" />
+                    <input type="text" placeholder="Fencing (e.g. Electric Fenced)" value={formData.fencing} onChange={(e) => setFormData({ ...formData, fencing: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#ff914d]" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-2">Road Width Access (Ft)</label>
-                    <input type="number" placeholder="Road Access (e.g. 24)" value={formData.road_width_ft} onChange={(e) => setFormData({ ...formData, road_width_ft: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#0A9BA2]" />
+                    <input type="number" placeholder="Road Access (e.g. 24)" value={formData.road_width_ft} onChange={(e) => setFormData({ ...formData, road_width_ft: e.target.value })} className="w-full px-6 py-4 bg-slate-50 rounded-2xl font-bold text-sm border border-slate-200 focus:bg-white focus:border-[#ff914d]" />
                   </div>
                 </div>
               </div>
 
               {/* Amenities */}
               <div className="space-y-6">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#0A9BA2]">Amenities & Infrastructure</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#0c3b2e]">Amenities & Infrastructure</h3>
                 <div className="flex space-x-2">
                   <input
                     type="text"
                     value={newAmenity}
                     onChange={(e) => setNewAmenity(e.target.value)}
                     placeholder="Add an infrastructure item (e.g. Worker Shed, Solar Power)"
-                    className="flex-1 px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#0A9BA2] outline-none transition-all"
+                    className="flex-1 px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:bg-white focus:border-[#ff914d] outline-none transition-all"
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addAmenity())}
                   />
                   <button 
                     type="button" 
                     onClick={addAmenity}
-                    className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-xs uppercase tracking-wider hover:bg-[#0A9BA2] transition-all cursor-pointer"
+                    className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-xs uppercase tracking-wider hover:bg-[#ff914d] transition-all cursor-pointer"
                   >
                     Add
                   </button>
@@ -601,7 +624,7 @@ const AdminProperties = () => {
                 {formData.amenities.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {formData.amenities.map((amenity, index) => (
-                      <div key={index} className="flex items-center space-x-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl group hover:border-[#0A9BA2]/30 transition-all">
+                      <div key={index} className="flex items-center space-x-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl group hover:border-[#ff914d]/30 transition-all">
                         <span className="text-xs font-bold text-slate-700">{amenity}</span>
                         <button 
                           type="button" 
@@ -620,7 +643,7 @@ const AdminProperties = () => {
               <div className="grid md:grid-cols-2 gap-8">
                  {/* Image Upload Area */}
                  <div className="space-y-6">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#0A9BA2]">Images (Photos)</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#0c3b2e]">Images (Photos)</h3>
                     <div className="flex flex-col space-y-3">
                       <div className="flex space-x-2">
                         <input
@@ -645,7 +668,7 @@ const AdminProperties = () => {
                           type="button"
                           disabled={uploading}
                           onClick={() => fileInputRef.current?.click()}
-                          className="w-full px-6 py-4 bg-[#0A9BA2]/5 border border-[#0A9BA2]/20 border-dashed rounded-2xl flex items-center justify-center space-x-3 hover:bg-[#0A9BA2]/10 transition-all font-bold text-xs uppercase tracking-wider text-[#0A9BA2] disabled:opacity-50 cursor-pointer"
+                          className="w-full px-6 py-4 bg-[#0A9BA2]/5 border border-[#0A9BA2]/20 border-dashed rounded-2xl flex items-center justify-center space-x-3 hover:bg-[#ff914d]/10 transition-all font-bold text-xs uppercase tracking-wider text-[#0c3b2e] disabled:opacity-50 cursor-pointer"
                         >
                           {uploading ? (
                             <Loader2 className="w-5 h-5 animate-spin" />
@@ -700,7 +723,7 @@ const AdminProperties = () => {
                             <Loader2 className="w-5 h-5 animate-spin" />
                           ) : (
                             <>
-                              <Video className="w-4 h-4 text-[#0A9BA2]" />
+                              <Video className="w-4 h-4 text-[#0c3b2e]" />
                               <span>Upload Video File (Max 50MB)</span>
                             </>
                           )}
@@ -734,7 +757,7 @@ const AdminProperties = () => {
                              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm"><ShieldCheck className="w-5 h-5" /></div>
                              <span className="text-xs font-bold uppercase tracking-widest text-slate-800">Active Listing</span>
                           </div>
-                          <input type="checkbox" checked={formData.is_active} onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })} className="w-6 h-6 accent-[#0A9BA2] cursor-pointer" />
+                          <input type="checkbox" checked={formData.is_active} onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })} className="w-6 h-6 accent-[#ff914d] cursor-pointer" />
                        </label>
                     </div>
                  </div>
@@ -745,7 +768,7 @@ const AdminProperties = () => {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full md:w-auto px-12 py-5 bg-[#0A9BA2] text-white rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#0A9BA2]/10 flex items-center justify-center space-x-3 active:scale-95 disabled:opacity-50 cursor-pointer"
+                  className="w-full md:w-auto px-12 py-5 bg-[#0c3b2e] hover:bg-[#ff914d] text-white transition-colors rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#0c3b2e]/10 flex items-center justify-center space-x-3 active:scale-95 disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? (
                     <Loader2 className="w-6 h-6 animate-spin" />

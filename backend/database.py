@@ -1,6 +1,7 @@
 import aiomysql
 import json
 import logging
+import uuid
 from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ def parse_json_fields(row):
                 row[field] = []
                 
     # Normalize types
-    for field in ['price', 'area_sqft']:
+    for field in ['price', 'area_sqft', 'acres', 'latitude', 'longitude']:
         if field in row and row[field] is not None:
             row[field] = float(row[field])
             
@@ -90,7 +91,7 @@ class MySQLDatabase:
                     )
                 """)
                 
-                # Properties table (adapted for Farming Lands)
+                # Properties table (adapted for USA Land, matching Land.com clone)
                 await cur.execute("""
                     CREATE TABLE IF NOT EXISTS properties (
                         id VARCHAR(36) PRIMARY KEY,
@@ -101,11 +102,16 @@ class MySQLDatabase:
                         price DECIMAL(15, 2) NOT NULL,
                         price_type VARCHAR(50) NOT NULL DEFAULT 'sale',
                         city VARCHAR(100) NOT NULL,
-                        area VARCHAR(100) NOT NULL,
+                        county VARCHAR(100),
+                        state VARCHAR(100),
+                        zip_code VARCHAR(20),
                         address TEXT,
                         bedrooms INT DEFAULT 0,
                         bathrooms INT DEFAULT 0,
                         area_sqft DECIMAL(15, 2),
+                        acres DECIMAL(15, 2),
+                        latitude DECIMAL(10, 8),
+                        longitude DECIMAL(11, 8),
                         images JSON,
                         amenities JSON,
                         floor_plan_url VARCHAR(255),
@@ -125,7 +131,7 @@ class MySQLDatabase:
                     )
                 """)
 
-                # Interests table
+                # Interests table (Inquiries)
                 await cur.execute("""
                     CREATE TABLE IF NOT EXISTS interests (
                         id VARCHAR(36) PRIMARY KEY,
@@ -167,6 +173,17 @@ class MySQLDatabase:
                     )
                 """)
 
+                # Saved properties table (Wishlist for logged-in buyers)
+                await cur.execute("""
+                    CREATE TABLE IF NOT EXISTS saved_properties (
+                        id VARCHAR(36) PRIMARY KEY,
+                        user_id VARCHAR(36) NOT NULL,
+                        property_id VARCHAR(36) NOT NULL,
+                        created_at DATETIME NOT NULL,
+                        UNIQUE KEY unique_user_property (user_id, property_id)
+                    )
+                """)
+
     async def get_user_by_email(self, email):
         async with self.pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cur:
@@ -197,7 +214,7 @@ class MySQLDatabase:
                 await cur.execute("SELECT * FROM users")
                 return await cur.fetchall()
 
-    async def get_properties(self, property_type=None, property_subtype=None, city=None, min_price=None, max_price=None, bedrooms=None, featured=None, search=None, limit=50, skip=0):
+    async def get_properties(self, property_type=None, property_subtype=None, city=None, state=None, county=None, min_price=None, max_price=None, min_acres=None, max_acres=None, bedrooms=None, featured=None, search=None, limit=50, skip=0):
         query = "SELECT * FROM properties WHERE is_active = TRUE"
         params = []
         
@@ -210,12 +227,24 @@ class MySQLDatabase:
         if city:
             query += " AND city LIKE %s"
             params.append(f"%{city}%")
+        if state:
+            query += " AND state = %s"
+            params.append(state)
+        if county:
+            query += " AND county LIKE %s"
+            params.append(f"%{county}%")
         if min_price is not None:
             query += " AND price >= %s"
             params.append(min_price)
         if max_price is not None:
             query += " AND price <= %s"
             params.append(max_price)
+        if min_acres is not None:
+            query += " AND acres >= %s"
+            params.append(min_acres)
+        if max_acres is not None:
+            query += " AND acres <= %s"
+            params.append(max_acres)
         if bedrooms:
             query += " AND bedrooms = %s"
             params.append(bedrooms)
@@ -223,9 +252,41 @@ class MySQLDatabase:
             query += " AND is_featured = %s"
             params.append(1 if featured else 0)
         if search:
-            query += " AND (title LIKE %s OR description LIKE %s OR city LIKE %s OR area LIKE %s)"
+            state_map = {
+                "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR", "california": "CA", "colorado": "CO",
+                "connecticut": "CT", "delaware": "DE", "florida": "FL", "georgia": "GA", "hawaii": "HI", "idaho": "ID",
+                "illinois": "IL", "indiana": "IN", "iowa": "IA", "kansas": "KS", "kentucky": "KY", "louisiana": "LA",
+                "maine": "ME", "maryland": "MD", "massachusetts": "MA", "michigan": "MI", "minnesota": "MN", "mississippi": "MS",
+                "missouri": "MO", "montana": "MT", "nebraska": "NE", "nevada": "NV", "new hampshire": "NH", "new jersey": "NJ",
+                "new mexico": "NM", "new york": "NY", "north carolina": "NC", "north dakota": "ND", "ohio": "OH", "oklahoma": "OK",
+                "oregon": "OR", "pennsylvania": "PA", "rhode island": "RI", "south carolina": "SC", "south dakota": "SD",
+                "tennessee": "TN", "texas": "TX", "utah": "UT", "vermont": "VT", "virginia": "VA", "washington": "WA",
+                "west virginia": "WV", "wisconsin": "WI", "wyoming": "WY"
+            }
+            search_clause = "(title LIKE %s OR description LIKE %s OR city LIKE %s OR county LIKE %s OR state LIKE %s OR zip_code LIKE %s"
             s = f"%{search}%"
-            params.extend([s, s, s, s])
+            search_params = [s, s, s, s, s, s]
+            
+            # Map full state names to abbreviations if present in the search term
+            search_words = [w.strip(",.!?").lower() for w in search.split()]
+            found_states = []
+            for word in search_words:
+                if word in state_map:
+                    found_states.append(state_map[word])
+            
+            # Also check exact matching of full phrase if multi-word state like "New York"
+            search_lower = search.lower().strip()
+            for fullname, code in state_map.items():
+                if fullname in search_lower and code not in found_states:
+                    found_states.append(code)
+                    
+            for state_code in found_states:
+                search_clause += " OR state = %s"
+                search_params.append(state_code)
+                
+            search_clause += ")"
+            query += f" AND {search_clause}"
+            params.extend(search_params)
             
         query += " ORDER BY created_at DESC LIMIT %s OFFSET %s"
         params.extend([limit, skip])
@@ -258,17 +319,17 @@ class MySQLDatabase:
         p['is_featured'] = 1 if p.get('is_featured') else 0
         p['is_active'] = 1 if p.get('is_active') else 0
         
-        # Ensure farming specific fields are present
-        for field in ['soil_type', 'water_source', 'crop_history', 'fencing', 'road_width_ft', 'video_url']:
+        # Ensure all columns are present
+        for field in ['soil_type', 'water_source', 'crop_history', 'fencing', 'road_width_ft', 'video_url', 'county', 'state', 'zip_code', 'acres', 'latitude', 'longitude']:
             if field not in p:
                 p[field] = None
 
         fields = [
             'id', 'title', 'description', 'property_type', 'property_subtype', 'price', 'price_type',
-            'city', 'area', 'address', 'bedrooms', 'bathrooms', 'area_sqft', 'images', 'amenities',
-            'floor_plan_url', 'virtual_tour_url', 'builder_name', 'builder_info', 'is_featured', 'is_active',
-            'created_at', 'interest_count', 'soil_type', 'water_source', 'crop_history', 'fencing',
-            'road_width_ft', 'video_url'
+            'city', 'county', 'state', 'zip_code', 'address', 'bedrooms', 'bathrooms', 'area_sqft', 'acres',
+            'latitude', 'longitude', 'images', 'amenities', 'floor_plan_url', 'virtual_tour_url',
+            'builder_name', 'builder_info', 'is_featured', 'is_active', 'created_at', 'interest_count',
+            'soil_type', 'water_source', 'crop_history', 'fencing', 'road_width_ft', 'video_url'
         ]
         
         cols = ", ".join(fields)
@@ -288,15 +349,15 @@ class MySQLDatabase:
         p['is_featured'] = 1 if p.get('is_featured') else 0
         p['is_active'] = 1 if p.get('is_active') else 0
         
-        # Ensure farming specific fields are present
-        for field in ['soil_type', 'water_source', 'crop_history', 'fencing', 'road_width_ft', 'video_url']:
+        for field in ['soil_type', 'water_source', 'crop_history', 'fencing', 'road_width_ft', 'video_url', 'county', 'state', 'zip_code', 'acres', 'latitude', 'longitude']:
             if field not in p:
                 p[field] = None
 
         fields = [
             'title', 'description', 'property_type', 'property_subtype', 'price', 'price_type',
-            'city', 'area', 'address', 'bedrooms', 'bathrooms', 'area_sqft', 'images', 'amenities',
-            'floor_plan_url', 'virtual_tour_url', 'builder_name', 'builder_info', 'is_featured', 'is_active',
+            'city', 'county', 'state', 'zip_code', 'address', 'bedrooms', 'bathrooms', 'area_sqft', 'acres',
+            'latitude', 'longitude', 'images', 'amenities', 'floor_plan_url', 'virtual_tour_url',
+            'builder_name', 'builder_info', 'is_featured', 'is_active',
             'soil_type', 'water_source', 'crop_history', 'fencing', 'road_width_ft', 'video_url'
         ]
         
@@ -319,7 +380,24 @@ class MySQLDatabase:
     async def get_cities(self):
         async with self.pool.acquire() as conn:
             async with conn.cursor() as cur:
-                await cur.execute("SELECT DISTINCT city FROM properties WHERE is_active = TRUE")
+                await cur.execute("SELECT DISTINCT city FROM properties WHERE is_active = TRUE ORDER BY city")
+                rows = await cur.fetchall()
+                return [row[0] for row in rows]
+
+    async def get_states(self):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute("SELECT DISTINCT state FROM properties WHERE is_active = TRUE AND state IS NOT NULL AND state != '' ORDER BY state")
+                rows = await cur.fetchall()
+                return [row[0] for row in rows]
+
+    async def get_counties(self, state=None):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor() as cur:
+                if state:
+                    await cur.execute("SELECT DISTINCT county FROM properties WHERE is_active = TRUE AND state = %s AND county IS NOT NULL AND county != '' ORDER BY county", (state,))
+                else:
+                    await cur.execute("SELECT DISTINCT county FROM properties WHERE is_active = TRUE AND county IS NOT NULL AND county != '' ORDER BY county")
                 rows = await cur.fetchall()
                 return [row[0] for row in rows]
 
@@ -328,6 +406,15 @@ class MySQLDatabase:
             async with conn.cursor(aiomysql.DictCursor) as cur:
                 await cur.execute("SELECT * FROM interests WHERE property_id = %s AND email = %s", (property_id, email))
                 return await cur.fetchone()
+
+    async def get_all_interests(self, property_id=None):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cur:
+                if property_id:
+                    await cur.execute("SELECT * FROM interests WHERE property_id = %s ORDER BY created_at DESC", (property_id,))
+                else:
+                    await cur.execute("SELECT * FROM interests ORDER BY created_at DESC")
+                return await cur.fetchall()
 
     async def create_interest(self, interest_dict):
         fields = ['id', 'property_id', 'property_title', 'name', 'email', 'phone', 'created_at']
@@ -445,20 +532,19 @@ class MySQLDatabase:
                 await cur.execute("SELECT COUNT(*) FROM contacts WHERE is_read = FALSE")
                 unread_contacts = (await cur.fetchone())[0]
                 
-                # We can map residential/commercial to total/featured for backward compatibility or land statistics
-                await cur.execute("SELECT COUNT(*) FROM properties WHERE property_subtype = 'orchard' AND is_active = TRUE")
-                orchard_count = (await cur.fetchone())[0]
+                await cur.execute("SELECT COUNT(*) FROM properties WHERE property_subtype = 'ranches' AND is_active = TRUE")
+                ranches_count = (await cur.fetchone())[0]
                 
-                await cur.execute("SELECT COUNT(*) FROM properties WHERE property_subtype = 'plantation' AND is_active = TRUE")
-                plantation_count = (await cur.fetchone())[0]
+                await cur.execute("SELECT COUNT(*) FROM properties WHERE property_subtype = 'farms' AND is_active = TRUE")
+                farms_count = (await cur.fetchone())[0]
                 
                 return {
                     "total_properties": total_properties,
                     "total_interests": total_interests,
                     "total_contacts": total_contacts,
                     "unread_contacts": unread_contacts,
-                    "residential_properties": orchard_count,
-                    "commercial_properties": plantation_count
+                    "residential_properties": ranches_count, # Map ranches to residential
+                    "commercial_properties": farms_count     # Map farms to commercial
                 }
 
     async def delete_all_properties_and_blogs(self):
@@ -467,17 +553,36 @@ class MySQLDatabase:
                 await cur.execute("DELETE FROM properties")
                 await cur.execute("DELETE FROM blogs")
 
-    async def get_all_interests(self, property_id=None):
-        query = "SELECT * FROM interests"
-        params = []
-        if property_id:
-            query += " WHERE property_id = %s"
-            params.append(property_id)
-        query += " ORDER BY created_at DESC"
+    async def get_saved_properties(self, user_id):
         async with self.pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cur:
-                await cur.execute(query, tuple(params))
-                return await cur.fetchall()
+                await cur.execute("""
+                    SELECT p.* FROM properties p
+                    JOIN saved_properties s ON p.id = s.property_id
+                    WHERE s.user_id = %s AND p.is_active = TRUE
+                """, (user_id,))
+                rows = await cur.fetchall()
+                return [parse_json_fields(row) for row in rows]
+
+    async def get_saved_property(self, user_id, property_id):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cur:
+                await cur.execute("SELECT * FROM saved_properties WHERE user_id = %s AND property_id = %s", (user_id, property_id))
+                return await cur.fetchone()
+
+    async def add_saved_property(self, user_id, property_id):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute("""
+                    INSERT INTO saved_properties (id, user_id, property_id, created_at)
+                    VALUES (%s, %s, %s, %s)
+                """, (str(uuid.uuid4()), user_id, property_id, datetime.now(timezone.utc)))
+
+    async def remove_saved_property(self, user_id, property_id):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute("DELETE FROM saved_properties WHERE user_id = %s AND property_id = %s", (user_id, property_id))
+                return cur.rowcount
 
     async def insert_properties(self, properties_list):
         for prop in properties_list:
