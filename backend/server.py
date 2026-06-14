@@ -951,6 +951,51 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
+@api_router.get("/db-status")
+async def db_status():
+    import os
+    db_url = os.environ.get('MYSQL_PUBLIC_URL') or os.environ.get('MYSQL_URL') or os.environ.get('DATABASE_URL')
+    
+    def sanitize_url(url):
+        if not url: return None
+        try:
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+            if parsed.password:
+                return url.replace(parsed.password, "********")
+        except:
+            pass
+        return url
+
+    status_info = {
+        "db_initialized": db.pool is not None,
+        "MYSQL_PUBLIC_URL": sanitize_url(os.environ.get('MYSQL_PUBLIC_URL')),
+        "MYSQL_URL": sanitize_url(os.environ.get('MYSQL_URL')),
+        "DATABASE_URL": sanitize_url(os.environ.get('DATABASE_URL')),
+        "MYSQL_HOST_env": os.environ.get('MYSQL_HOST'),
+        "MYSQLHOST_env": os.environ.get('MYSQLHOST'),
+        "MYSQL_PORT_env": os.environ.get('MYSQL_PORT'),
+        "MYSQLPORT_env": os.environ.get('MYSQLPORT'),
+        "MYSQL_USER_env": os.environ.get('MYSQL_USER'),
+        "MYSQLUSER_env": os.environ.get('MYSQLUSER'),
+        "MYSQL_DB_env": os.environ.get('MYSQL_DB'),
+        "MYSQLDATABASE_env": os.environ.get('MYSQLDATABASE'),
+        "MYSQL_DATABASE_env": os.environ.get('MYSQL_DATABASE'),
+    }
+    
+    if db.pool:
+        try:
+            async with db.pool.acquire() as conn:
+                async with conn.cursor() as cur:
+                    await cur.execute("SELECT 1")
+                    status_info["query_test"] = "Success"
+        except Exception as e:
+            status_info["query_test"] = f"Failed: {str(e)}"
+    else:
+        status_info["query_test"] = "Pool is None"
+        
+    return status_info
+
 # Include router
 app.include_router(api_router)
 
