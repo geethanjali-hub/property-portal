@@ -26,13 +26,13 @@ const Footer = () => {
       ]
     },
     {
-      heading: 'Real Estate For Sale by State',
+      heading: 'Real Estate For Sale by Region',
       links: [
-        { label: 'Maharashtra Land For Sale',    href: '/properties?search=MH' },
-        { label: 'Karnataka Land For Sale',      href: '/properties?search=KA' },
-        { label: 'Tamil Nadu Land For Sale',     href: '/properties?search=TN' },
-        { label: 'Rajasthan Land For Sale',      href: '/properties?search=RJ' },
-        { label: 'Gujarat Land For Sale',        href: '/properties?search=GJ' },
+        { label: 'Kanva Reservoir Area',    href: '/properties?search=Kanva' },
+        { label: 'Closepet Hills Area',      href: '/properties?search=Closepet' },
+        { label: 'Channapatna Border Area',  href: '/properties?search=Channapatna' },
+        { label: 'Kengal Region',           href: '/properties?search=Kengal' },
+        { label: 'Bidadi Region',           href: '/properties?search=Bidadi' },
         { label: 'More', href: '/properties' }
       ]
     },
@@ -41,10 +41,9 @@ const Footer = () => {
       links: [
         { label: 'About Us',       href: '/about' },
         { label: 'Contact Us',     href: '/contact' },
-        { label: 'Terms of Use',   href: '#' },
-        { label: 'Sitemap',        href: '#' },
-        { label: 'Privacy Notice', href: '#' },
-        { label: 'Cookie Policy',  href: '#' },
+        { label: 'Terms of Use',   href: '/terms-of-use' },
+        { label: 'Privacy Notice', href: '/privacy-policy' },
+        { label: 'Cookie Policy',  href: '/cookie-policy' },
         { label: 'Exercise Your Privacy Rights', href: '#' }
       ]
     },

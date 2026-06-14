@@ -12,7 +12,7 @@ from datetime import datetime
 
 # Configuration
 BACKEND_URL = "http://127.0.0.1:8000/api"
-ADMIN_EMAIL = "admin@makemypropertyz.com"
+ADMIN_EMAIL = "admin@nature.com"
 ADMIN_PASSWORD = "admin123"
 
 class Colors:

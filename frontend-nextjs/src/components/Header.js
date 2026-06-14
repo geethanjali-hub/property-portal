@@ -9,7 +9,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const NAV_LINKS = [
   { label: 'Buy Land', href: '/properties' },
-  { label: 'Find an Agent', href: '/contact' },
   {
     label: 'More',
     href: '#',
@@ -20,9 +19,9 @@ const NAV_LINKS = [
   }
 ];
 
-const LogoIcon = ({ headerTransparent }) => (
+const LogoIcon = () => (
   <svg 
-    className={`w-6 h-6 ${headerTransparent ? 'text-white' : 'text-[#0c3b2e]'}`} 
+    className="w-6 h-6 text-white" 
     viewBox="0 0 24 24" 
     fill="currentColor"
   >
@@ -124,7 +123,7 @@ const Header = () => {
 
           {/* Centered Logo */}
           <Link href="/" className="flex items-center gap-2.5 absolute left-1/2 -translate-x-1/2" aria-label="Nature">
-            <LogoIcon headerTransparent={headerTransparent} />
+            <LogoIcon />
             <span className="font-serif text-xl md:text-2xl font-bold tracking-tight !text-white">
               Nature<span className="text-[10px] align-super">™</span>
             </span>
@@ -215,7 +214,7 @@ const Header = () => {
             >
               <div className="hz-mobile-drawer__header border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <LogoIcon headerTransparent={headerTransparent} />
+                  <LogoIcon />
                   <span className="font-serif text-xl font-bold text-white">Nature™</span>
                 </div>
                 <button onClick={() => setMobileOpen(false)} className="text-white">

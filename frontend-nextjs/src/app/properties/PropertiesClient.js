@@ -156,7 +156,7 @@ const PropertiesClient = () => {
         mapInstance = L.map('leaflet-map', {
           zoomControl: false,
           scrollWheelZoom: true
-        }).setView([20.5937, 78.9629], 5); // Centered on India
+        }).setView([12.7150, 77.2813], 11); // Centered on Ramanagara
 
         // Set tiles (Premium Mapbox-like Earthy Stamen/OSM theme)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -213,8 +213,8 @@ const PropertiesClient = () => {
         // Fit boundaries to include all markers
         mapInstance.fitBounds(bounds, { padding: [40, 40] });
       } else {
-        // Default India View if no properties found
-        mapInstance.setView([20.5937, 78.9629], 5);
+        // Default Ramanagara View if no properties found
+        mapInstance.setView([12.7150, 77.2813], 11);
       }
     };
 
@@ -265,7 +265,7 @@ const PropertiesClient = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div>
             <h1 className="text-3xl font-extrabold text-slate-800 mb-2">
-              {savedOnly ? 'Your Saved Properties' : 'Premium Lands for Sale in India'}
+              {savedOnly ? 'Your Saved Properties' : 'Premium Lands for Sale in Ramanagara'}
             </h1>
             <p className="text-slate-500 font-bold">
               {loading ? 'Finding listings...' : `${properties.length} parcels found`}

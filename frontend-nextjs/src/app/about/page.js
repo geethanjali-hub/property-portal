@@ -31,12 +31,6 @@ const AboutPage = () => {
     }
   ];
 
-  const team = [
-    { name: 'Rajesh Kumar', role: 'Founder & CEO', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400' },
-    { name: 'Priya Sharma', role: 'Head of Operations', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400' },
-    { name: 'Amit Patel', role: 'Senior Land Consultant', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400' },
-    { name: 'Sneha Reddy', role: 'Customer Relations Manager', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400' },
-  ];
 
   const testimonials = [
     {
@@ -180,33 +174,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-24 bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="text-[#0c3b2e] font-bold text-sm uppercase tracking-widest">Our Team</span>
-            <h2 className="text-4xl font-black text-neutral-900 mt-2 tracking-tighter">Meet The Experts</h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-            {team.map((member, index) => (
-              <div key={index} className="text-center group">
-                <div className="relative mb-6">
-                  <div className="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:border-[#0c3b2e] transition-all duration-300">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                  </div>
-                </div>
-                <h3 className="font-black text-neutral-900 text-lg tracking-tight">{member.name}</h3>
-                <p className="text-[#0c3b2e] font-bold text-xs uppercase tracking-widest mt-1">{member.role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Testimonials */}
       <section className="py-24 bg-neutral-50 text-neutral-900 overflow-hidden relative">

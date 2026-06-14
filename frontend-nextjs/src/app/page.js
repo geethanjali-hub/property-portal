@@ -45,9 +45,9 @@ const HomePage = () => {
   const newsList = [
     { 
       date: 'June 2, 2026', 
-      title: '10 Biggest Ranches & Farms for Sale in India', 
+      title: '10 Best Farming & Orchard Lands in Ramanagara', 
       image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=500',
-      excerpt: "As we head into the new year, here's a snapshot of the biggest ranches and agricultural estates for sale throughout India. At a..." 
+      excerpt: "Here is a snapshot of the most fertile and value-rich farming lands for sale throughout the Ramanagara region. At a..." 
     },
     { 
       date: 'June 1, 2026', 
@@ -57,15 +57,15 @@ const HomePage = () => {
     },
     { 
       date: 'May 31, 2026', 
-      title: 'How To Maximize Value When Selling Land in Rajasthan', 
+      title: 'How To Maximize Value When Selling Land in Ramanagara', 
       image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500',
-      excerpt: 'With rich heritage and vast geographic expanses, Rajasthan is home to an active land market. Here is how to get the best price...' 
+      excerpt: 'With rich soil quality and high groundwater levels, Ramanagara is home to an active land market. Here is how to get the best price...' 
     },
     { 
       date: 'May 29, 2026', 
-      title: 'How To Best Approach Selling Land in Punjab', 
+      title: 'How To Best Approach Selling Land in Ramanagara', 
       image: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=500',
-      excerpt: "Agricultural land in Punjab is highly valuable. Selling farming acreage requires a level of planning and preparation from landowners. If you're..." 
+      excerpt: "Agricultural land in Ramanagara is highly valuable. Selling farming acreage requires a level of planning and preparation from landowners. If you're..." 
     }
   ];
 
@@ -90,10 +90,10 @@ const HomePage = () => {
             className="mb-8"
           >
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold mb-4 tracking-tight drop-shadow-lg !text-white" style={{ color: '#fff' }}>
-              Find Your Open Space
+              Find Your Open Space in Ramanagara
             </h1>
             <p className="text-lg md:text-xl font-medium text-slate-100 drop-shadow-md">
-              Find farms, ranches, acreage, country homes, and land for sale
+              Find premium agricultural lands, farms, and plots in Ramanagara
             </p>
           </motion.div>
 
@@ -107,7 +107,7 @@ const HomePage = () => {
             <form onSubmit={handleSearchSubmit} className="w-full flex items-center justify-between">
               <input 
                 type="text"
-                placeholder="Enter a State, County, City, or ID"
+                placeholder="Enter a location, region, or ID in Ramanagara..."
                 value={searchValue}
                 onChange={e => setSearchValue(e.target.value)}
                 className="w-full bg-transparent border-none text-slate-800 placeholder-slate-400 font-semibold focus:outline-none pl-6 text-base"
@@ -133,7 +133,7 @@ const HomePage = () => {
             className="text-center mb-12"
           >
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-800">
-              Land for Sale in India
+              Land for Sale in Ramanagara
             </h2>
           </motion.div>
 

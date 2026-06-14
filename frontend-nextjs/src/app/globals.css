@@ -50,6 +50,11 @@
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
 
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
   html { scroll-behavior: smooth; }
 
   body {
@@ -122,10 +127,10 @@
 }
 
 .hz-header--solid {
-  background: rgba(255,255,255,0.96);
+  background: #0c3b2e;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 1px 0 var(--border), var(--shadow-sm);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 .hz-header__inner {

@@ -35,10 +35,10 @@ const ScrollToTop = () => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-neutral-900 text-white rounded-2xl shadow-premium border border-white/10 flex items-center justify-center hover:bg-primary transition-all active:scale-95 group overflow-hidden"
+          className="fixed bottom-24 right-8 z-50 w-14 h-14 bg-neutral-900 text-white rounded-2xl shadow-premium border border-white/10 flex items-center justify-center hover:bg-[#0c3b2e] transition-all active:scale-95 group overflow-hidden"
           aria-label="Scroll to top"
         >
-          <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
+          <div className="absolute inset-0 bg-[#0c3b2e]/20 opacity-0 group-hover:opacity-100 transition-opacity blur-xl"></div>
           <ArrowUp className="w-6 h-6 relative z-10 group-hover:-translate-y-1 transition-transform" />
         </motion.button>
       )}
