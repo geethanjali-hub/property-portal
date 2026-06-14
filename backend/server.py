@@ -50,8 +50,12 @@ async def startup_event():
     MYSQL_DB = os.environ.get('MYSQL_DB', 'property_portal')
     
     logger.info(f"Initializing MySQL Connection on {MYSQL_HOST}:{MYSQL_PORT}...")
-    await db.initialize(MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB)
-    logger.info("MySQL Connection and Tables Initialized Successfully.")
+    try:
+        await db.initialize(MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB)
+        logger.info("MySQL Connection and Tables Initialized Successfully.")
+    except Exception as e:
+        logger.error(f"CRITICAL: Failed to initialize MySQL Connection: {e}")
+        logger.error("The application will start, but database operations will fail until MySQL is configured and running.")
 
 # ==================== PYDANTIC MODELS ====================
 
