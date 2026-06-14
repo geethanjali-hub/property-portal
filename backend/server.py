@@ -43,12 +43,50 @@ logger = logging.getLogger(__name__)
 
 @app.on_event("startup")
 async def startup_event():
-    MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
-    MYSQL_PORT = int(os.environ.get('MYSQL_PORT', 3306))
-    MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
-    MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', '')
-    MYSQL_DB = os.environ.get('MYSQL_DB', 'property_portal')
+    import os
+    from urllib.parse import urlparse
     
+    # Check for MySQL connection URL first (e.g. Railway public URL)
+    db_url = os.environ.get('MYSQL_PUBLIC_URL') or os.environ.get('MYSQL_URL') or os.environ.get('DATABASE_URL')
+    
+    MYSQL_HOST = None
+    MYSQL_PORT = None
+    MYSQL_USER = None
+    MYSQL_PASSWORD = None
+    MYSQL_DB = None
+
+    if db_url and db_url.startswith("mysql"):
+        try:
+            # Handle standard scheme format for urlparse
+            if db_url.startswith("mysql://"):
+                parsed = urlparse(db_url)
+            else:
+                parsed = urlparse("mysql://" + db_url.split("://", 1)[-1])
+            MYSQL_HOST = parsed.hostname
+            MYSQL_PORT = parsed.port or 3306
+            MYSQL_USER = parsed.username
+            MYSQL_PASSWORD = parsed.password
+            MYSQL_DB = parsed.path.lstrip('/')
+            logger.info("Successfully parsed database connection details from database URL.")
+        except Exception as e:
+            logger.error(f"Failed to parse database URL: {e}")
+
+    # Fallback to individual variables if not set from URL
+    if not MYSQL_HOST:
+        MYSQL_HOST = os.environ.get('MYSQL_HOST') or os.environ.get('MYSQLHOST') or 'localhost'
+    if not MYSQL_PORT:
+        port_env = os.environ.get('MYSQL_PORT') or os.environ.get('MYSQLPORT') or '3306'
+        try:
+            MYSQL_PORT = int(port_env)
+        except ValueError:
+            MYSQL_PORT = 3306
+    if not MYSQL_USER:
+        MYSQL_USER = os.environ.get('MYSQL_USER') or os.environ.get('MYSQLUSER') or 'root'
+    if not MYSQL_PASSWORD:
+        MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD') or os.environ.get('MYSQLPASSWORD') or ''
+    if not MYSQL_DB:
+        MYSQL_DB = os.environ.get('MYSQL_DB') or os.environ.get('MYSQLDATABASE') or os.environ.get('MYSQL_DATABASE') or 'property_portal'
+
     logger.info(f"Initializing MySQL Connection on {MYSQL_HOST}:{MYSQL_PORT}...")
     try:
         await db.initialize(MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB)
