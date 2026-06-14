@@ -45,9 +45,9 @@ const HomePage = () => {
   const newsList = [
     { 
       date: 'June 2, 2026', 
-      title: '10 Biggest Ranches for Sale in America', 
+      title: '10 Biggest Ranches & Farms for Sale in India', 
       image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=500',
-      excerpt: "As we head into the new year, here's a snapshot of the biggest ranches for sale throughout the United States. At a..." 
+      excerpt: "As we head into the new year, here's a snapshot of the biggest ranches and agricultural estates for sale throughout India. At a..." 
     },
     { 
       date: 'June 1, 2026', 
@@ -57,15 +57,15 @@ const HomePage = () => {
     },
     { 
       date: 'May 31, 2026', 
-      title: 'How To Maximize Value When Selling Land in Alabama', 
+      title: 'How To Maximize Value When Selling Land in Rajasthan', 
       image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500',
-      excerpt: 'With over 50,000 square miles of land area and a population surpassing 5 million people, Alabama is home to an...' 
+      excerpt: 'With rich heritage and vast geographic expanses, Rajasthan is home to an active land market. Here is how to get the best price...' 
     },
     { 
       date: 'May 29, 2026', 
-      title: 'How To Best Approach Selling Land in Iowa', 
+      title: 'How To Best Approach Selling Land in Punjab', 
       image: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=500',
-      excerpt: "Land is a unique commodity, and selling acreage requires a level of planning and preparation from landowners. If you're..." 
+      excerpt: "Agricultural land in Punjab is highly valuable. Selling farming acreage requires a level of planning and preparation from landowners. If you're..." 
     }
   ];
 
@@ -133,7 +133,7 @@ const HomePage = () => {
             className="text-center mb-12"
           >
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-800">
-              Land for Sale in the United States
+              Land for Sale in India
             </h2>
           </motion.div>
 
@@ -210,7 +210,7 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
           <div className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl font-bold tracking-tight !text-white" style={{ color: '#fff' }}>
-              News from Land.com
+              News from Nature
             </h2>
           </div>
 

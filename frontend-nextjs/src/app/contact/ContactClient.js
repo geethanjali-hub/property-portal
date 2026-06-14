@@ -62,7 +62,7 @@ formData});
     {
       icon: Mail,
       title: 'Email Us',
-      details: ['contact@makemypropertyz.com']
+      details: ['contact@natureportal.in']
     },
     {
       icon: Clock,

@@ -253,15 +253,12 @@ class MySQLDatabase:
             params.append(1 if featured else 0)
         if search:
             state_map = {
-                "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR", "california": "CA", "colorado": "CO",
-                "connecticut": "CT", "delaware": "DE", "florida": "FL", "georgia": "GA", "hawaii": "HI", "idaho": "ID",
-                "illinois": "IL", "indiana": "IN", "iowa": "IA", "kansas": "KS", "kentucky": "KY", "louisiana": "LA",
-                "maine": "ME", "maryland": "MD", "massachusetts": "MA", "michigan": "MI", "minnesota": "MN", "mississippi": "MS",
-                "missouri": "MO", "montana": "MT", "nebraska": "NE", "nevada": "NV", "new hampshire": "NH", "new jersey": "NJ",
-                "new mexico": "NM", "new york": "NY", "north carolina": "NC", "north dakota": "ND", "ohio": "OH", "oklahoma": "OK",
-                "oregon": "OR", "pennsylvania": "PA", "rhode island": "RI", "south carolina": "SC", "south dakota": "SD",
-                "tennessee": "TN", "texas": "TX", "utah": "UT", "vermont": "VT", "virginia": "VA", "washington": "WA",
-                "west virginia": "WV", "wisconsin": "WI", "wyoming": "WY"
+                "andhra pradesh": "AP", "arunachal pradesh": "AR", "assam": "AS", "bihar": "BR", "chhattisgarh": "CG",
+                "goa": "GA", "gujarat": "GJ", "haryana": "HR", "himachal pradesh": "HP", "jammu and kashmir": "JK",
+                "jharkhand": "JH", "karnataka": "KA", "kerala": "KL", "madhya pradesh": "MP", "maharashtra": "MH",
+                "manipur": "MN", "meghalaya": "ML", "mizoram": "MZ", "nagaland": "NL", "odisha": "OD", "punjab": "PB",
+                "rajasthan": "RJ", "sikkim": "SK", "tamil nadu": "TN", "telangana": "TG", "tripura": "TR",
+                "uttar pradesh": "UP", "uttarakhand": "UK", "west bengal": "WB", "delhi": "DL"
             }
             search_clause = "(title LIKE %s OR description LIKE %s OR city LIKE %s OR county LIKE %s OR state LIKE %s OR zip_code LIKE %s"
             s = f"%{search}%"

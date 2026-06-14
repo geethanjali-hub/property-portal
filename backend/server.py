@@ -29,7 +29,7 @@ JWT_SECRET = os.environ.get('JWT_SECRET', 'landclone-secret-key-2026')
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 
-app = FastAPI(title="Land.com Clone API")
+app = FastAPI(title="Nature Portal API")
 
 # Mount static files for uploaded files (images/videos)
 app.mount("/api/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
@@ -633,56 +633,53 @@ async def seed_data():
             admin_user = {
                 "id": str(uuid.uuid4()),
                 "email": "admin@makemypropertyz.com",
-                "name": "Land.com Portal Admin",
-                "phone": "+1 (800) 555-0199",
+                "name": "Nature Portal Admin",
+                "phone": "+91 98765 43210",
                 "password": hash_password("admin123"),
                 "role": "admin",
                 "created_at": datetime.now(timezone.utc)
             }
             await db.create_user(admin_user)
             results["admin"] = "Created"
-        else:
-            results["admin"] = "Already exists"
             
-        admin_exists_2 = await db.get_user_by_email("admin@land.com")
+        admin_exists_2 = await db.get_user_by_email("admin@nature.com")
         if not admin_exists_2:
             admin_user_2 = {
                 "id": str(uuid.uuid4()),
-                "email": "admin@land.com",
-                "name": "Land.com Owner Admin",
-                "phone": "+1 (800) 555-0100",
+                "email": "admin@nature.com",
+                "name": "Nature Owner Admin",
+                "phone": "+91 98765 01234",
                 "password": hash_password("admin123"),
                 "role": "admin",
                 "created_at": datetime.now(timezone.utc)
             }
             await db.create_user(admin_user_2)
-            results["land_admin"] = "Created"
+            results["nature_admin"] = "Created"
         
         # Reset properties and blogs
         await db.delete_all_properties_and_blogs()
         
-        # Seed USA land listings matching Land.com sub-types:
-        # ranches, farms, hunting, timberland, waterfront, commercial, acreage
+        # Seed Indian land listings matching Nature sub-types: farms, hunting, timberland, waterfront, commercial, acreage
         sample_lands = [
             {
                 "id": str(uuid.uuid4()),
-                "title": "Majestic Texas Star Ranch",
-                "description": "Exquisite Texas Hill Country ranch located in Gillespie County. Features rolling landscape, beautiful mature oak groves, complete perimeter fence, and high-flow water well. A pristine sanctuary perfect for livestock, equestrian activities, or a luxury country estate. Incredible mountain and sunset views.",
+                "title": "Majestic Rajasthan Royal Ranch",
+                "description": "Exquisite desert-edge ranch located in Jodhpur district. Features rolling sandy terrain, beautiful mature khejri groves, complete boundary fencing, and high-flow tube well. A pristine sanctuary perfect for agricultural activities, dairy farming, or a luxury countryside estate. Incredible sunset and desert views.",
                 "property_type": "land",
                 "property_subtype": "ranches",
-                "price": 2450000.0,
+                "price": 24500000.0,
                 "price_type": "sale",
-                "city": "Fredericksburg",
-                "county": "Gillespie County",
-                "state": "TX",
-                "zip_code": "78624",
-                "address": "1200 Old Mason Road",
+                "city": "Jodhpur",
+                "county": "Jodhpur District",
+                "state": "RJ",
+                "zip_code": "342001",
+                "address": "12 Girasar Road",
                 "bedrooms": 0,
                 "bathrooms": 0,
                 "area_sqft": 6534000.0, # 150 Acres
                 "acres": 150.0,
-                "latitude": 30.2740,
-                "longitude": -98.8720,
+                "latitude": 26.2389,
+                "longitude": 73.0243,
                 "images": [
                     "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900",
                     "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900",
@@ -693,85 +690,85 @@ async def seed_data():
                 "floor_plan_url": "",
                 "virtual_tour_url": "",
                 "builder_name": "Direct Land Sales",
-                "builder_info": "Premium Texas land and ranch specialists.",
+                "builder_info": "Premium Rajasthan land and estate specialists.",
                 "is_featured": True,
                 "is_active": True,
                 "created_at": datetime.now(timezone.utc),
                 "interest_count": 0,
-                "soil_type": "Sandy Loam & Limestone",
-                "water_source": "Private Deep Well",
-                "crop_history": "Native Grass Pasture",
+                "soil_type": "Sandy Loam & Desert Soil",
+                "water_source": "Tube Well",
+                "crop_history": "Native Grass & Bajra",
                 "fencing": "Full Barbed Wire Fenced",
                 "road_width_ft": 30,
                 "video_url": "https://cdn.pixabay.com/video/2021/08/04/83861-584742517_large.mp4"
             },
             {
                 "id": str(uuid.uuid4()),
-                "title": "Florida Citrus Grove & Hobby Farm",
-                "description": "Beautiful citrus grove featuring active, high-yield orange and grapefruit trees in central Florida. Complete with underground drip irrigation fed by a deep-aquifer well, equipment shed, and perfect building site for a private farmhouse. Fully accessible via public paved county roads.",
+                "title": "Maharashtra Alphonso Mango Orchard & Farm",
+                "description": "Beautiful citrus and mango grove featuring active, high-yield Alphonso mango trees in coastal Maharashtra. Complete with underground drip irrigation fed by a deep borewell, equipment shed, and perfect building site for a private farmhouse. Fully accessible via public paved roads.",
                 "property_type": "land",
                 "property_subtype": "farms",
-                "price": 980000.0,
+                "price": 9800000.0,
                 "price_type": "sale",
-                "city": "Lakeland",
-                "county": "Polk County",
-                "state": "FL",
-                "zip_code": "33801",
-                "address": "440 Citrus Grove Way",
+                "city": "Ratnagiri",
+                "county": "Ratnagiri District",
+                "state": "MH",
+                "zip_code": "415612",
+                "address": "440 Alphonso Orchard Way",
                 "bedrooms": 0,
                 "bathrooms": 0,
                 "area_sqft": 3484800.0, # 80 Acres
                 "acres": 80.0,
-                "latitude": 27.9600,
-                "longitude": -81.7600,
+                "latitude": 16.9902,
+                "longitude": 73.3120,
                 "images": [
                     "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=900",
                     "https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=900",
                     "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900",
                     "https://images.unsplash.com/photo-1628189679199-31ff97920ab7?w=900"
                 ],
-                "amenities": ["Underground Irrigation", "Deep Aquifer Well", "Equipment Shed", "Power Hookup", "Paved Road Access"],
+                "amenities": ["Underground Irrigation", "Deep Borewell", "Equipment Shed", "Power Hookup", "Paved Road Access"],
                 "floor_plan_url": "",
                 "virtual_tour_url": "",
                 "builder_name": "Direct Land Sales",
-                "builder_info": "Specialists in productive Florida agricultural plots.",
+                "builder_info": "Specialists in productive Maharashtra agricultural plots.",
                 "is_featured": True,
                 "is_active": True,
                 "created_at": datetime.now(timezone.utc),
                 "interest_count": 0,
-                "soil_type": "Sandy Clay Loam",
-                "water_source": "Deep Aquifer Pump",
-                "crop_history": "Orange Grove (Valencia)",
+                "soil_type": "Laterite & Red Loamy Soil",
+                "water_source": "Borewell Pump",
+                "crop_history": "Alphonso Mango",
                 "fencing": "Perimeter Fenced",
                 "road_width_ft": 24,
                 "video_url": "https://cdn.pixabay.com/video/2021/08/04/83861-584742517_large.mp4"
             },
             {
                 "id": str(uuid.uuid4()),
-                "title": "Montana Wilderness Hunting Forest",
-                "description": "Spectacular forest acreage bordering the Flathead National Forest. Features panoramic mountain views, mature Douglas fir and pine, and natural freshwater springs. Excellent hunting tract for elk, deer, and bear, or build an off-grid log cabin. Complete seasonal jeep trail access.",
+                "title": "Western Ghats Nature Retreat & Timberland",
+                "description": "Spectacular forested acreage bordering the Western Ghats reserve in Coorg. Features panoramic mountain views, mature teak and rosewood plantations, and natural freshwater springs. Excellent conservation tract, off-grid eco-resort site, or premium private estate. Complete seasonal trail access.",
                 "property_type": "land",
-                "property_subtype": "hunting",
-                "price": 1850000.0,
+                "property_subtype": "hunting", # kept for database subtype alignment
+                "price": 18500000.0,
                 "price_type": "sale",
-                "city": "Kalispell",
-                "county": "Flathead County",
-                "state": "MT",
-                "zip_code": "59901",
-                "address": "NPS Forest Boundary Rd",
+                "city": "Coorg",
+                "county": "Kodagu District",
+                "state": "KA",
+                "zip_code": "571201",
+                "address": "Madikeri Forest Boundary Rd",
                 "bedrooms": 0,
                 "bathrooms": 0,
                 "area_sqft": 13939200.0, # 320 Acres
                 "acres": 320.0,
-                "latitude": 48.2000,
-                "longitude": -114.3000,
+                "latitude": 12.4244,
+                "longitude": 75.7382,
                 "images": [
                     "https://images.unsplash.com/photo-1448375240586-882707db888b?w=900",
                     "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900",
                     "https://images.unsplash.com/photo-1524147055964-b52e3e4a2e58?w=900",
                     "https://images.unsplash.com/photo-1522002166668-3e4b7c6b5b54?w=900"
                 ],
-                "amenities": ["Mountain Springs", "Borders Public Land", "Timber Value", "Off-Grid Cabin Site", "Jeep Trail"],
+                "amenities": ["Mountain Springs", "Borders Forest Reserve", "Timber Value", "Off-Grid Eco-Resort Site", "Jeep Trail"],
                 "floor_plan_url": "",
                 "virtual_tour_url": "",
                 "builder_name": "Direct Land Sales",
@@ -782,30 +779,30 @@ async def seed_data():
                 "interest_count": 0,
                 "soil_type": "Mountain Forest Soil",
                 "water_source": "Natural Springs",
-                "crop_history": "Douglas Fir Timber",
+                "crop_history": "Teak & Rosewood Timber",
                 "fencing": "None",
                 "road_width_ft": 15,
                 "video_url": "https://cdn.pixabay.com/video/2021/08/04/83861-584742517_large.mp4"
             },
             {
                 "id": str(uuid.uuid4()),
-                "title": "Wyoming Riverfront Fly-Fishing Ranch",
-                "description": "Premium acreage fronting the scenic North Platte River. Perfect setting for fly-fishing, equestrian activities, or building a riverfront home. Includes senior water rights, flat lush pastures, power availability, and year-round county road maintenance. A rare waterfront gem.",
+                "title": "Ganges Riverfront Organic Farm & Ranch",
+                "description": "Premium acreage fronting the scenic Ganges River in Rishikesh. Perfect setting for organic farming, wellness retreat, or building a riverfront home. Includes senior water rights, flat lush pastures, power availability, and year-round road maintenance. A rare waterfront gem.",
                 "property_type": "land",
                 "property_subtype": "waterfront",
-                "price": 1200000.0,
+                "price": 12000000.0,
                 "price_type": "sale",
-                "city": "Wheatland",
-                "county": "Platte County",
-                "state": "WY",
-                "zip_code": "82201",
+                "city": "Rishikesh",
+                "county": "Dehradun District",
+                "state": "UK",
+                "zip_code": "249201",
                 "address": "780 River Meadows Road",
                 "bedrooms": 0,
                 "bathrooms": 0,
                 "area_sqft": 5227200.0, # 120 Acres
                 "acres": 120.0,
-                "latitude": 42.0600,
-                "longitude": -104.9500,
+                "latitude": 30.0869,
+                "longitude": 78.2676,
                 "images": [
                     "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900",
                     "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900",
@@ -816,37 +813,37 @@ async def seed_data():
                 "floor_plan_url": "",
                 "virtual_tour_url": "",
                 "builder_name": "Direct Land Sales",
-                "builder_info": "Experts in premier waterfront and river ranches.",
+                "builder_info": "Experts in premier waterfront and river estates.",
                 "is_featured": False,
                 "is_active": True,
                 "created_at": datetime.now(timezone.utc),
                 "interest_count": 0,
                 "soil_type": "Alluvial Loam",
                 "water_source": "River & Water Rights",
-                "crop_history": "Alfalfa & Pasture Grass",
+                "crop_history": "Organic Vegetables & Grass",
                 "fencing": "Cross Fenced",
                 "road_width_ft": 24,
                 "video_url": "https://cdn.pixabay.com/video/2021/08/04/83861-584742517_large.mp4"
             },
             {
                 "id": str(uuid.uuid4()),
-                "title": "Colorado Mountain View Alpine Acreage",
-                "description": "Breathtaking high-altitude parcel in Park County, CO. Nestled in a dense grove of Aspen and Lodgepole Pine trees. Magnificent views of the snow-capped Rocky Mountains. Ready for your dream cabin, vacation getaway, or eco-retreat. Accessible via maintained dirt road.",
+                "title": "Himalayan View Alpine Acreage",
+                "description": "Breathtaking high-altitude parcel in Manali, Himachal Pradesh. Nestled in a dense grove of Pine and Deodar trees. Magnificent views of the snow-capped Himalayan peaks. Ready for your dream villa, vacation getaway, or eco-retreat. Accessible via maintained road.",
                 "property_type": "land",
                 "property_subtype": "acreage",
-                "price": 425000.0,
+                "price": 4250000.0,
                 "price_type": "sale",
-                "city": "Fairplay",
-                "county": "Park County",
-                "state": "CO",
-                "zip_code": "80440",
-                "address": "Lot 45 Aspen Ridge Trail",
+                "city": "Manali",
+                "county": "Kullu District",
+                "state": "HP",
+                "zip_code": "175131",
+                "address": "Lot 45 Solang Ridge Trail",
                 "bedrooms": 0,
                 "bathrooms": 0,
                 "area_sqft": 1960200.0, # 45 Acres
                 "acres": 45.0,
-                "latitude": 39.1200,
-                "longitude": -105.7800,
+                "latitude": 32.2396,
+                "longitude": 77.1887,
                 "images": [
                     "https://images.unsplash.com/photo-1594900161121-705b0b29841c?w=900",
                     "https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=900",
@@ -857,44 +854,44 @@ async def seed_data():
                 "floor_plan_url": "",
                 "virtual_tour_url": "",
                 "builder_name": "Direct Land Sales",
-                "builder_info": "Curators of premium Rocky Mountain mountain lands.",
+                "builder_info": "Curators of premium Himalayan mountain lands.",
                 "is_featured": False,
                 "is_active": True,
                 "created_at": datetime.now(timezone.utc),
                 "interest_count": 0,
-                "soil_type": "Rocky Mountain Gravelly Soil",
-                "water_source": "Well Permitted (Need Drill)",
-                "crop_history": "Natural Pines & Aspens",
+                "soil_type": "Himalayan Gravelly Soil",
+                "water_source": "Spring Water (Need Piping)",
+                "crop_history": "Natural Pines & Deodars",
                 "fencing": "None",
                 "road_width_ft": 20,
                 "video_url": "https://cdn.pixabay.com/video/2021/08/04/83861-584742517_large.mp4"
             },
             {
                 "id": str(uuid.uuid4()),
-                "title": "Georgia Pine Forest Investment Tract",
-                "description": "Excellent investment tract containing fully managed, fast-growing Loblolly Pine plantation in South Georgia. Road networks throughout, completely flat terrain, well-suited for timber harvest rotation and lease income from hunters. Borders paved state highway.",
+                "title": "Nilgiri Tea & Pine Plantation Tract",
+                "description": "Excellent investment tract containing fully managed, fast-growing pine and tea plantation in the Nilgiri hills. Road networks throughout, completely rolling terrain, well-suited for tea harvest rotation and lease income. Borders paved state highway.",
                 "property_type": "land",
                 "property_subtype": "timberland",
-                "price": 650000.0,
+                "price": 6500000.0,
                 "price_type": "sale",
-                "city": "Waycross",
-                "county": "Ware County",
-                "state": "GA",
-                "zip_code": "31501",
-                "address": "Hwy 84 East Timber Tract",
+                "city": "Ooty",
+                "county": "Nilgiris District",
+                "state": "TN",
+                "zip_code": "643001",
+                "address": "Coonoor Highway Tea Tract",
                 "bedrooms": 0,
                 "bathrooms": 0,
                 "area_sqft": 9147600.0, # 210 Acres
                 "acres": 210.0,
-                "latitude": 31.2100,
-                "longitude": -82.3500,
+                "latitude": 11.4102,
+                "longitude": 76.6950,
                 "images": [
                     "https://images.unsplash.com/photo-1448375240586-882707db888b?w=900",
                     "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900",
                     "https://images.unsplash.com/photo-1522002166668-3e4b7c6b5b54?w=900",
                     "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900"
                 ],
-                "amenities": ["Managed Pine Stand", "Hunting Lease Ready", "Harvest Road Network", "State Hwy Frontage", "Flat Terrain"],
+                "amenities": ["Managed Tea Plantation", "Harvest Road Network", "State Hwy Frontage", "Rolling Hills"],
                 "floor_plan_url": "",
                 "virtual_tour_url": "",
                 "builder_name": "Direct Land Sales",
@@ -903,9 +900,9 @@ async def seed_data():
                 "is_active": True,
                 "created_at": datetime.now(timezone.utc),
                 "interest_count": 0,
-                "soil_type": "Sandy Acidic Timber Soil",
-                "water_source": "Drainage Creeks",
-                "crop_history": "Loblolly Pine (Planted 2015)",
+                "soil_type": "Red Acidic Tea Soil",
+                "water_source": "Mountain Creeks",
+                "crop_history": "Assam & Nilgiri Tea",
                 "fencing": "Partially Boundary Blazed",
                 "road_width_ft": 25,
                 "video_url": "https://cdn.pixabay.com/video/2021/08/04/83861-584742517_large.mp4"
@@ -919,20 +916,20 @@ async def seed_data():
         sample_blogs = [
             {
                 "id": str(uuid.uuid4()),
-                "title": "A Guide to Buying Land and Inspecting Soil Types",
-                "excerpt": "Discover what to look for when inspecting acreage, understanding loam, clay, and sandy soil properties.",
-                "content": "Before buying land, the soil is one of the most critical aspects. Loam is the ideal agricultural soil, while rocky or clay soils require specific foundations. Always run a soil test or check government soil survey maps to analyze drainage, composition, and crop compatibility.",
+                "title": "A Guide to Buying Land and Inspecting Soil Types in India",
+                "excerpt": "Discover what to look for when inspecting farming acreage, understanding loam, clay, and black cotton soil properties.",
+                "content": "Before buying land in India, the soil type is one of the most critical aspects. Red loamy soil and black cotton soil are highly productive for various crops, while rocky soils require specific foundation work. Always run a soil test or check government soil surveys to analyze drainage, composition, and crop compatibility.",
                 "image_url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800",
-                "author_name": "Land Team",
+                "author_name": "Nature Team",
                 "is_published": True,
                 "created_at": datetime.now(timezone.utc),
                 "updated_at": datetime.now(timezone.utc)
             },
             {
                 "id": str(uuid.uuid4()),
-                "title": "Understanding Water Rights & Mineral Rights on Rural Land",
-                "excerpt": "Learn how water rights and mineral rights impact your land ownership and investment value.",
-                "content": "Water is gold on acreage. Whether it is senior riparian rights or groundwater permits, understand what rights come with the deed. Separately, make sure to verify if the seller retains mineral rights, which can affect oil, gas, or timber drilling operations on the property.",
+                "title": "Understanding Water Rights & Borewell Permissions on Indian Farm Land",
+                "excerpt": "Learn how groundwater regulations and river water rights impact your land ownership and investment value.",
+                "content": "Water is crucial on agricultural land. Whether it is canal water access or local borewell drilling permissions, understand what regulations apply in the state. Separately, verify title deeds and local land ceiling limits before finalizing any transactions.",
                 "image_url": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800",
                 "author_name": "Legal Department",
                 "is_published": True,
@@ -954,7 +951,7 @@ async def seed_data():
 
 @api_router.get("/")
 async def root():
-    return {"message": "Land.com Clone API", "version": "1.0.0", "tagline": "Pure Earth, Beautiful Land"}
+    return {"message": "Nature Portal API", "version": "1.0.0", "tagline": "Pure Earth, Beautiful Nature"}
 
 @api_router.get("/health")
 async def health_check():

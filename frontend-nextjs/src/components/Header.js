@@ -123,10 +123,10 @@ const Header = () => {
           </nav>
 
           {/* Centered Logo */}
-          <Link href="/" className="flex items-center gap-2.5 absolute left-1/2 -translate-x-1/2" aria-label="Land.com">
+          <Link href="/" className="flex items-center gap-2.5 absolute left-1/2 -translate-x-1/2" aria-label="Nature">
             <LogoIcon headerTransparent={headerTransparent} />
             <span className="font-serif text-xl md:text-2xl font-bold tracking-tight !text-white">
-              Land.com<span className="text-[10px] align-super">™</span>
+              Nature<span className="text-[10px] align-super">™</span>
             </span>
           </Link>
 
@@ -216,7 +216,7 @@ const Header = () => {
               <div className="hz-mobile-drawer__header border-b border-white/10">
                 <div className="flex items-center gap-2">
                   <LogoIcon headerTransparent={headerTransparent} />
-                  <span className="font-serif text-xl font-bold text-white">Land.com™</span>
+                  <span className="font-serif text-xl font-bold text-white">Nature™</span>
                 </div>
                 <button onClick={() => setMobileOpen(false)} className="text-white">
                   <X className="w-6 h-6" />

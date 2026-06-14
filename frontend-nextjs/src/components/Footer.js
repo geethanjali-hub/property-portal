@@ -28,16 +28,16 @@ const Footer = () => {
     {
       heading: 'Real Estate For Sale by State',
       links: [
-        { label: 'Texas Land For Sale',          href: '/properties?search=TX' },
-        { label: 'Florida Land For Sale',        href: '/properties?search=FL' },
-        { label: 'California Land For Sale',     href: '/properties?search=CA' },
-        { label: 'North Carolina Land For Sale', href: '/properties?search=NC' },
-        { label: 'Georgia Land For Sale',        href: '/properties?search=GA' },
+        { label: 'Maharashtra Land For Sale',    href: '/properties?search=MH' },
+        { label: 'Karnataka Land For Sale',      href: '/properties?search=KA' },
+        { label: 'Tamil Nadu Land For Sale',     href: '/properties?search=TN' },
+        { label: 'Rajasthan Land For Sale',      href: '/properties?search=RJ' },
+        { label: 'Gujarat Land For Sale',        href: '/properties?search=GJ' },
         { label: 'More', href: '/properties' }
       ]
     },
     {
-      heading: 'About Land',
+      heading: 'About Nature',
       links: [
         { label: 'About Us',       href: '/about' },
         { label: 'Contact Us',     href: '/contact' },
@@ -81,7 +81,7 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className="max-w-7xl mx-auto px-6 border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-xs font-semibold">
-          &copy; {year} CoStar Group (Land.com Clone)
+          &copy; {year} Nature Portal (India)
         </p>
 
         {/* Social Icons */}
