@@ -87,6 +87,15 @@ async def startup_event():
     if not MYSQL_DB:
         MYSQL_DB = os.environ.get('MYSQL_DB') or os.environ.get('MYSQLDATABASE') or os.environ.get('MYSQL_DATABASE') or 'property_portal'
 
+    # Auto-rewrite Railway internal host to public host when running outside Railway (e.g. on Render)
+    if MYSQL_HOST == "mysql.railway.internal":
+        logger.info("Detected Railway internal host. Auto-rewriting to public Railway proxy host...")
+        MYSQL_HOST = "zephyr.proxy.rlwy.net"
+        MYSQL_PORT = 17528
+        MYSQL_USER = "root"
+        MYSQL_PASSWORD = "BomZXjbYbKAHcTkdWJStkbYewulNIUJL"
+        MYSQL_DB = "railway"
+
     logger.info(f"Initializing MySQL Connection on {MYSQL_HOST}:{MYSQL_PORT}...")
     try:
         await db.initialize(MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB)
